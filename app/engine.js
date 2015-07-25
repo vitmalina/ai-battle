@@ -19,7 +19,16 @@ var engine = (function () {
 	}
 
 	function reset() {
-
+		field = {
+			a: ["br", "bp", "", "", "", "", "wp", "wr.png"],
+			b: ["bk", "bp", "", "", "", "", "wp", "wk.png"],
+			c: ["bb", "bp", "", "", "", "", "wp", "wb.png"],
+			d: ["bq", "bp", "", "", "", "", "wp", "wq.png"],
+			e: ["bi", "bp", "", "", "", "", "wp", "wi.png"],
+			f: ["bb", "bp", "", "", "", "", "wp", "wb.png"],
+			g: ["bk", "bp", "", "", "", "", "wp", "wk.png"],
+			h: ["br", "bp", "", "", "", "", "wp", "wr.png"]
+		};
 	}
 
 	function render() {
