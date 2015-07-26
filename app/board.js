@@ -29,8 +29,7 @@ var board = (function() {
 				}
 				var snip = "";
 				if (poss) {
-					snip = "<div class='poss' onclick='engine.move(" + (clicked + (i+(j+1))) + ")'></div>";
-					console.log("here");
+					snip = "<div class='poss' onclick='engine.move(\"" + clicked + ":" + (i+(j+1)) + "\")'></div>";
 				}
 
 				var piece = field[i][j];
