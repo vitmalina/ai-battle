@@ -4,17 +4,17 @@ img {
 
 .board-holder {
 	position: absolute;
-	height: 520px;
-	width: 520px;
+	height: 534px;
+	width: 534px;
 	background-size: contain;
-	background-color: black;
+	background-color: #7D6857;
 	-webkit-user-select: none;
 }
 
 .board {
 	position: absolute;
-	top: 4px;
-	left: 4px;
+	top: 11px;
+	left: 11px;
 	background-color: gray;
 	height: 512px;
 	width: 512px;
@@ -24,4 +24,13 @@ img {
 	position: absolute;
 	height: 64px; 
 	width: 64px;
+}
+
+.block {
+	position: absolute;
+}
+
+.notation {
+	color: white;
+	font-size: 12px;
 }

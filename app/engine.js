@@ -23,6 +23,7 @@ var engine = (function () {
 	function init() {
 		reset();
 		board.render($.extend(true, {}, field));
+		board.notation();
 	}
 
 	function reset() {
@@ -30,8 +31,8 @@ var engine = (function () {
 			a: ["wr", "wp", "", "", "", "", "bp", "br"],
 			b: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			c: ["wb", "wp", "", "", "", "", "bp", "bb"],
-			d: ["wq", "wp", "", "", "", "", "bp", "bq"],
-			e: ["wk", "wp", "", "", "", "", "bp", "bk"],
+			d: ["wk", "wp", "", "", "", "", "bp", "bk"],
+			e: ["wq", "wp", "", "", "", "", "bp", "bq"],
 			f: ["wb", "wp", "", "", "", "", "bp", "bb"],
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]

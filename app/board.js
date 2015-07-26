@@ -1,10 +1,10 @@
 var board = (function() {
 
 	var places = 'abcdefgh';
-
 	return {
 		render 		: render,
-		selectPeice : selectPeice
+		selectPeice : selectPeice,
+		notation    : notation
 	}
 
 	function render(field) {
@@ -14,7 +14,7 @@ var board = (function() {
 
 				var piece = field[i][j];
 
-				var color = "white";
+				var color = "#F0D9B5";
 				var block = -1;
 				if (j%2) {
 					block = 1;
@@ -22,7 +22,7 @@ var board = (function() {
 					block = 0;
 				}
 				if ((places.indexOf(i)+block)%2) {
-					color = "#C3C4C5";
+					color = "#B58863";
 				}
 
 				
@@ -52,11 +52,11 @@ var board = (function() {
 						top = 5;
 					}
 
-					html += "<div class='square' style='background-color: " + color + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' onclick='board.selectPeice(" + i + ", " + j + ")'>"
+					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' onclick='board.selectPeice(" + places.indexOf(i) + ", " + j + ")'>"
 						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>"
 						 + "</div>";	
 				} else {
-					html += "<div class='square' style='background-color: " + color + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'></div>";
+					html += "<div class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'></div>";
 				}
 				
 			}
@@ -64,7 +64,16 @@ var board = (function() {
 		$("#board").html(html);
 	}
 
-	function selectPeice() {
+	function selectPeice(i, j) {
+		console.log(places[i], j);
+	}
 
+	function notation() {
+		for (var i = 0; i < 8; i++) {
+			$(".board-holder").append("<div class='block notation' style='top: " + (512-((i+1)*64-32)) + "px; left: 2px'>" + (i+1) + "</div>");
+		}
+		for (var i = 0; i < 8; i++) {
+			$(".board-holder").append("<div class='block notation' style='left: " + (i*64+44) + "px; bottom: -1px'>" + places[i] + "</div>");
+		}
 	}
 }());
