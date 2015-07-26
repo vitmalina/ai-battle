@@ -231,15 +231,16 @@ var engine = (function () {
 		}
 	}
 
-	function pretend(field, mv) {
+	function pretend(fld, mv) {
+		if (fld == null) fld = $.extend(true, {}, field);
 		var tmp = mv.split(':');
 		var f1  = tmp[0][0];
 		var i1  = parseInt(tmp[0][1]) - 1;
 		var f2  = tmp[1][0];
 		var i2  = parseInt(tmp[1][1]) - 1;
-		field[f2][i2] = field[f1][i1];
-		field[f1][i1] = '';
-		return field;
+		fld[f2][i2] = fld[f1][i1];
+		fld[f1][i1] = '';
+		return fld;
 	}
 
 	function isCheck(fld) {
