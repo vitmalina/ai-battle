@@ -3,7 +3,8 @@ var board = (function() {
 	var places = 'abcdefgh';
 
 	return {
-		render : render,
+		render 		: render,
+		selectPeice : selectPeice
 	}
 
 	function render(field) {
@@ -51,7 +52,7 @@ var board = (function() {
 						top = 5;
 					}
 
-					html += "<div class='square' style='background-color: " + color + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' onclick='engine.selectPeice(" + i + ", " + j + ")'>"
+					html += "<div class='square' style='background-color: " + color + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' onclick='board.selectPeice(" + i + ", " + j + ")'>"
 						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>"
 						 + "</div>";	
 				} else {
@@ -61,5 +62,9 @@ var board = (function() {
 			}
 		}
 		$("#board").html(html);
+	}
+
+	function selectPeice() {
+
 	}
 }());
