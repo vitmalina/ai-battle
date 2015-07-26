@@ -59,11 +59,17 @@ var engine = (function () {
 			$('#player2_turn').hide();
 			$("#player1_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
 			$("#player2_move").html("");
+			$("#game_holder").css("transform", "rotate(0deg)");
+			$(".player1").css("transform", "rotate(0deg)");
+			$(".player2").css("transform", "rotate(0deg)");
 		} else {
 			$('#player1_turn').hide();
 			$('#player2_turn').show();			
 			$("#player2_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
 			$("#player1_move").html("");
+			$("#game_holder").css("transform", "rotate(180deg)");
+			$(".player1").css("transform", "rotate(180deg)");
+			$(".player2").css("transform", "rotate(180deg)");
 		}
 		board.render($.extend(true, {}, field), [], false, taken);
 		if (moveCount == 0) {
@@ -83,6 +89,7 @@ var engine = (function () {
 			}
 		}
 		$("#history").html(html);
+
 	}
 
 	function getMoves(fld, player) {
