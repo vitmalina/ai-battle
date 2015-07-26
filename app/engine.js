@@ -80,6 +80,26 @@ var engine = (function () {
 							}
 						}
 					}
+					// rook
+					if (piece[1] == 'r') {
+						// straight
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num, i + k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num, i - k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num + k, i);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num - k, i);
+							if (beat === false || beat !== '') break;
+						}
+					}
 					// horse (aka knight)
 					if (piece[1] == 'h') {
 						addIfValid(piece, f, i, num + 1, i + 2);
@@ -91,6 +111,75 @@ var engine = (function () {
 						addIfValid(piece, f, i, num - 2, i + 1);
 						addIfValid(piece, f, i, num - 2, i - 1);
 					}
+					// bishop
+					if (piece[1] == 'b') {
+						// dioganal
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num + k, i + k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num + k, i - k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num - k, i + k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num - k, i - k);
+							if (beat === false || beat !== '') break;
+						}
+					}
+					// queen
+					if (piece[1] == 'q') {
+						// dioganal
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num + k, i + k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num + k, i - k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num - k, i + k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num - k, i - k);
+							if (beat === false || beat !== '') break;
+						}
+						// straight
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num, i + k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num, i - k);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num + k, i);
+							if (beat === false || beat !== '') break;
+						}
+						for (var k=1; k<8; k++) {
+							var beat = addIfValid(piece, f, i, num - k, i);
+							if (beat === false || beat !== '') break;
+						}						
+					}
+					// king
+					if (piece[1] == 'k') {
+						addIfValid(piece, f, i, num + 1, i + 1);
+						addIfValid(piece, f, i, num + 1, i - 1);
+						addIfValid(piece, f, i, num + 1, i);
+						addIfValid(piece, f, i, num - 1, i + 1);
+						addIfValid(piece, f, i, num - 1, i - 1);
+						addIfValid(piece, f, i, num - 1, i);
+						addIfValid(piece, f, i, num, i + 1);
+						addIfValid(piece, f, i, num, i - 1);
+					}
+
 				}
 			}
 		}
@@ -99,14 +188,15 @@ var engine = (function () {
 		function addIfValid(piece, f, i, f1, i1) {
 			// out of the board
 			if (f1 < 0 || f1 > 7 || i1 < 0 || i1 > 7) {
-				return;
+				return false;
 			}
 			// taken by same color piece
 			var beat = field[places[f1]][i1];
 			if (beat && beat[0] == pl1) {
-				return;
+				return false;
 			}
 			moves.push(f+(i+1)+':'+places[f1]+(i1+1)+(beat ? ':' + beat : ''));
+			return beat;
 		}
 	}
 
