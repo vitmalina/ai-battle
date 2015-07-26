@@ -23,8 +23,9 @@ var engine = (function () {
 
 	function init() {
 		reset();
-		board.render($.extend(true, {}, field), [], false, taken);
+		board.render($.extend(true, {}, field), [], false, false);
 		board.notation();
+		$("#player1_move").html(engine.getMoves().length+" possible moves");
 	}
 
 	function reset() {
@@ -55,9 +56,13 @@ var engine = (function () {
 		if (turn == 'w') {
 			$('#player1_turn').show();
 			$('#player2_turn').hide();
+			$("#player1_move").html(engine.getMoves().length+" possible moves");
+			$("#player2_move").html("");
 		} else {
 			$('#player1_turn').hide();
 			$('#player2_turn').show();			
+			$("#player2_move").html(engine.getMoves().length+" possible moves");
+			$("#player1_move").html("");
 		}
 		board.render($.extend(true, {}, field), [], false, taken);
 	}

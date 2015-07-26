@@ -73,3 +73,10 @@ img {
 	right: -86px;
 	background-color: #E2DACD;
 }
+
+.player_move {
+	height: 20px;
+	width: 100px;
+	margin-top: 2px;
+	font-size: 10px;
+}

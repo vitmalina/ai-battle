@@ -1,6 +1,7 @@
 var board = (function() {
 
 	var field;
+	var taken;
 	var places = 'abcdefgh';
 
 	return {
@@ -9,9 +10,12 @@ var board = (function() {
 		notation    : notation
 	}
 
-	function render(fieldCopy, possible, clicked) {
+	function render(fieldCopy, possible, clicked, takenCopy) {
 		if (fieldCopy) {
 			field = fieldCopy;
+		}
+		if (takenCopy) {
+			taken = takenCopy;
 		}
 		var html = "";
 		for (var i in field) {
@@ -44,6 +48,7 @@ var board = (function() {
 				if ((places.indexOf(i)+block)%2) {
 					color = "#B58863";
 				}
+				
 
 				
 
@@ -96,7 +101,7 @@ var board = (function() {
 			}
 		} 
 		console.log('-->', poss);
-		board.render(null, poss, (i+(j+1)));
+		board.render(null, poss, (i+(j+1)), false);
 	}
 
 	function notation() {
