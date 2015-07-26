@@ -41,6 +41,7 @@ var engine = (function () {
 		board.render($.extend(true, {}, field), [], false, taken);
 		board.notation();
 		$("#player1_move").html(engine.getMoves().length+" possible moves");
+		history = [];
 	}
 
 	function move(action) {
@@ -68,7 +69,19 @@ var engine = (function () {
 			$("#player1_move").html("");
 		}
 		board.render($.extend(true, {}, field), [], false, taken);
-		
+		var html = "";
+		for (var i = 0; i < history.length; i++) {
+			if (i/2 == Math.floor(i/2)) {
+				html +=   "<div class='block' style='width: 50px; height: 20px; left: 0px; top: " + (Math.floor(i/2)*25) + "px; border-right: 1px solid black; text-align: center; border-bottom: 1px solid gray'>"
+						+ history[i]
+						+ "</div>";
+			} else {
+				html +=   "<div class='block' style='width: 48px; height: 20px; right: 0px; top: " + (Math.floor(i/2)*25) + "px; text-align: center; border-bottom: 1px solid gray'>"
+						+ history[i]
+						+ "</div>";
+			}
+		}
+		$("#history").html(html);
 	}
 
 	function getMoves(fld, player) {

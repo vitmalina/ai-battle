@@ -1,3 +1,7 @@
+body {
+	overflow: hidden;
+}
+
 img {
 	position: absolute;
 }
@@ -79,4 +83,13 @@ img {
 	width: 100px;
 	margin-top: 2px;
 	font-size: 10px;
+}
+
+.history {
+	position: absolute;
+	right: -120px;
+	width: 100px;
+	height: 534px;
+	border: 1px solid gray;
+	overflow: auto;
 }
