@@ -24,12 +24,12 @@ var board = (function() {
 					}
 				}
 				var extra = "";
-				if (clicked == (i+(j+1))) {
+				if (clicked == (i+(j+1)) && possible.length > 0) {
 					extra = "-webkit-box-shadow: inset 0px 0px 100px 0px rgba(61,106,242,1);";
 				}
 				var snip = "";
 				if (poss) {
-					snip = "<div class='poss'></div>";
+					snip = "<div class='poss' onclick='engine.move(" + (clicked + (i+(j+1))) + ")'></div>";
 					console.log("here");
 				}
 
