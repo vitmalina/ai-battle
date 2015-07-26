@@ -1,16 +1,33 @@
 var board = (function() {
 
+	var field;
 	var places = 'abcdefgh';
+
 	return {
 		render 		: render,
-		selectPeice : selectPeice,
+		selectPiece : selectPiece,
 		notation    : notation
 	}
 
-	function render(field) {
+	function render(fieldCopy, possible) {
+		if (fieldCopy) {
+			field = fieldCopy;
+		}
 		var html = "";
 		for (var i in field) {
 			for (var j = 0; j < 8; j++) {
+				var poss = false;
+				for (var n = 0; n < possible.length; n++) {
+					if (possible[n].substr(3) == (i+(j+1))) {
+						poss = true;
+						console.log((i+(j+1)));
+					}
+				}
+				var snip = "";
+				if (poss) {
+					snip = "<div class='poss'></div>";
+					console.log("here");
+				}
 
 				var piece = field[i][j];
 
@@ -52,11 +69,13 @@ var board = (function() {
 						top = 5;
 					}
 
-					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' onclick='board.selectPeice(" + places.indexOf(i) + ", " + j + ")'>"
-						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>"
+					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
+						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>"
+						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>" 
+						 +		snip 
 						 + "</div>";	
 				} else {
-					html += "<div class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'></div>";
+					html += "<div class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'>" + snip + "</div>";
 				}
 				
 			}
@@ -64,8 +83,17 @@ var board = (function() {
 		$("#board").html(html);
 	}
 
-	function selectPeice(i, j) {
-		console.log(places[i], j);
+	function selectPiece(i, j) {
+		var i = places[i];
+		var moves = engine.getMoves();
+		var poss = [];
+		for (var n = 0; n < moves.length; n++) {
+			if (moves[n].substr(0,2) == (i+(j+1))) {
+				poss.push(moves[n]);
+			}
+		} 
+		console.log('-->', poss);
+		board.render(null, poss);
 	}
 
 	function notation() {

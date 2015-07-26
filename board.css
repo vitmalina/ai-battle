@@ -34,3 +34,13 @@ img {
 	color: white;
 	font-size: 12px;
 }
+
+.poss {
+	width: 32px; 
+	height: 32px;
+	border-radius: 10000px;
+	background-color: black;
+	position: absolute;
+	left: 16px; 
+	top: 16px;
+}

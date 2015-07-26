@@ -22,7 +22,7 @@ var engine = (function () {
 
 	function init() {
 		reset();
-		board.render($.extend(true, {}, field));
+		board.render($.extend(true, {}, field), []);
 		board.notation();
 	}
 
