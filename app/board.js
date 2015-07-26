@@ -76,13 +76,13 @@ var board = (function() {
 						top = 4;
 					}
 
-					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + ";" + extra + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
+					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + ";" + extra + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
 						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>"
 						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>" 
 						 +		snip 
 						 + "</div>";	
 				} else {
-					html += "<div class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'>" + snip + "</div>";
+					html += "<div class='square' style='background-color: " + color + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'>" + snip + "</div>";
 				}
 				
 			}
