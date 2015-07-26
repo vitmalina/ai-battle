@@ -3,10 +3,10 @@ var engine = (function () {
 	var field;
 	var places  = 'abcdefgh';
 	var taken   = [];
-	var turn    = 'w'; // whose turn it is
 	var history = [];
 
 	return {
+		turn		: 'w',		// whose turn it is
 		reset		: reset,
 		move		: move,
 		getMoves	: getMoves,
@@ -15,9 +15,13 @@ var engine = (function () {
 		show		: show
 	}
 
+	function init() {
+
+	}
+
 	function reset() {
 		taken = [];
-		turn  = 'w';
+		engine.turn  = 'w';
 		$('#player1_turn').show();
 		$('#player2_turn').hide();
 		field = {
@@ -48,9 +52,9 @@ var engine = (function () {
 		}
 		field[f2][i2] = field[f1][i1];
 		field[f1][i1] = '';
-		turn = (turn == 'w' ? 'b' : 'w');
+		engine.turn = (engine.turn == 'w' ? 'b' : 'w');
 		var moveCount = engine.getMoves().length;
-		if (turn == 'w') {
+		if (engine.turn == 'w') {
 			$('#player1_turn').show();
 			$('#player2_turn').hide();
 			$("#player1_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
@@ -63,7 +67,7 @@ var engine = (function () {
 		}
 		board.render($.extend(true, {}, field), [], false, taken);
 		if (moveCount == 0) {
-			alert('Check & Mate! ' + (turn == 'w' ? 'Player 2 WINS.' : 'Player 1 WINS.'));
+			alert('Check & Mate! ' + (engine.turn == 'w' ? 'Player 2 WINS.' : 'Player 1 WINS.'));
 			reset();
 		}
 		var html = "";
@@ -83,7 +87,7 @@ var engine = (function () {
 
 	function getMoves(fld, player) {
 		if (fld == null) fld = field;
-		var pl1 = (player ? player : turn);
+		var pl1 = (player ? player : engine.turn);
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var moves  = [];
 		var vCheck = (arguments.length > 0 ? false : true);
