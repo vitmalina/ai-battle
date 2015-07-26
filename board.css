@@ -3,7 +3,7 @@ img {
 }
 
 .board-holder {
-	position: absolute;
+	position: relative;
 	height: 534px;
 	width: 534px;
 	background-size: contain;
@@ -35,6 +35,24 @@ img {
 	font-size: 12px;
 }
 
+.player1, .player2 {
+	box-sizing: border-box;
+	background-color: #E2DACC;
+	width: 534px;
+	height: 40px;
+	padding: 8px;
+	font-size: 20px;
+}
+
+.turn {
+	float: right;
+	border-radius: 20px;
+	background-color: green;
+	width: 20px;
+	height: 20px;
+	margin-top: 2px;
+	margin-right: 10px;
+}
 .poss {
 	width: 32px; 
 	height: 32px;
