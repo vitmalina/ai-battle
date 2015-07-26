@@ -18,18 +18,18 @@ var board = (function() {
 			for (var j = 0; j < 8; j++) {
 				var poss = false;
 				for (var n = 0; n < possible.length; n++) {
-					if (possible[n].substr(3) == (i+(j+1))) {
+					if (possible[n].substr(3,2) == (i+(j+1))) {
 						poss = true;
 						console.log((i+(j+1)));
 					}
 				}
 				var extra = "";
 				if (clicked == (i+(j+1)) && possible.length > 0) {
-					extra = "-webkit-box-shadow: inset 0px 0px 100px 0px rgba(61,106,242,1);";
+					extra = "background-color: rgba(61,106,242,1)";
 				}
 				var snip = "";
 				if (poss) {
-					snip = "<div class='poss' onclick='engine.move(\"" + clicked + ":" + (i+(j+1)) + "\")'></div>";
+					snip = "<div class='block' style='height: 64px; width: 64px;' onclick='engine.move(\"" + clicked + ":" + (i+(j+1)) + "\")'><div class='poss'></div></div>";
 				}
 
 				var piece = field[i][j];
@@ -72,7 +72,7 @@ var board = (function() {
 						top = 5;
 					}
 
-					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='" + extra + ";background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
+					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + ";" + extra + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
 						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>"
 						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>" 
 						 +		snip 
