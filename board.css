@@ -65,3 +65,11 @@ img {
 	top: 16px;
 	border-radius: 10000px;
 }
+
+.taken {
+	height: 534px;
+	position: absolute;
+	width: 86px;
+	right: -86px;
+	background-color: #E2DACD;
+}
