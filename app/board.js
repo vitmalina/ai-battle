@@ -47,34 +47,8 @@ var board = (function() {
 				if ((places.indexOf(i)+block)%2) { 
 					color = "#B58863"; 
 				} 
-				 
-
- 				 
-
+				
  				if (piece) { 
-
- 					var left = 0; 
-					var top = 0; 
-
- 					if (piece.substr(1,2) == "p") { 
-						left = 12; 
-						top = 7; 
-					} else if (piece.substr(1,2) == "r") { 
-						left = 9; 
-						top = 7; 
-					}  else if (piece.substr(1,2) == "h") { 
-						left = 5; 
-						top = 7; 
-					} else if (piece.substr(1,2) == "b") { 
-						left = 4; 
-						top = 3; 
-					} else if (piece.substr(1,2) == "q") { 
-						left = 2; 
-						top = 5; 
-					} else if (piece.substr(1,2) == "k") { 
-						left = 5; 
-						top = 4; 
-					} 
 					var rotation = ""; 
 					if (engine.turn == "b") { 
 						rotation = "transform: rotate(180deg)"; 
@@ -82,7 +56,7 @@ var board = (function() {
 
  					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + ";" + extra + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' " 
 						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>" 
-						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px;" + rotation + "'>"  
+						 + "	<img src='img/" + piece + ".png' style='" + rotation + "; height: 64px; width: 64px'>"  
 						 +		snip  
 						 + "</div>";	 
 				} else { 
