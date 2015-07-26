@@ -53,7 +53,7 @@ var engine = (function () {
 				if (piece[0] == pl1) {
 					var num = places.indexOf(f);
 					// pawn
-					if (piece[1] == 'p1') {
+					if (piece[1] == 'p') {
 						// TODO: el pesan, pawn promotion
 						if (pl1 == 'w') {
 							if (i + 1 < 8 && field[f][i+1] == '') moves.push(f+(i+1)+':'+f+(i+2)); // one forward
