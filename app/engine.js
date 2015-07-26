@@ -11,9 +11,9 @@ var engine = (function () {
 		g: [],
 		h: []
 	};
-	var taken = [];
-	var turn  = 'w'; // whose turn it is
-
+	var taken   = [];
+	var turn    = 'w'; // whose turn it is
+	var history = [];
 	return {
 		reset		: reset,
 		move		: move,
@@ -43,8 +43,9 @@ var engine = (function () {
 		$("#player1_move").html(engine.getMoves().length+" possible moves");
 	}
 
-	function move(mv) {
-		var tmp = mv.split(':');
+	function move(action) {
+		history.push(action);
+		var tmp = action.split(':');
 		var f1  = tmp[0][0];
 		var i1  = parseInt(tmp[0][1]) - 1;
 		var f2  = tmp[1][0];
@@ -67,6 +68,7 @@ var engine = (function () {
 			$("#player1_move").html("");
 		}
 		board.render($.extend(true, {}, field), [], false, taken);
+		
 	}
 
 	function getMoves() {
