@@ -14,10 +14,16 @@ var engine = (function () {
 	var turn  = 'w'; // whose turn it is
 
 	return {
-		reset	: reset,
-		render	: render,
-		move	: move,
-		getMoves: getMoves
+		init		: init,
+		reset		: reset,
+		render		: render,
+		move		: move,
+		getMoves	: getMoves
+	}
+
+	function init() {
+		reset();
+		render();
 	}
 
 	function reset() {

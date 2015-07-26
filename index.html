@@ -2,9 +2,12 @@
 <html>
 <head>
 	<title>Chess</title>
-	<script type="text/javascript" src="app/engine.js"></script>
 	<script type="text/javascript" src="libs/jquery-1.11.2.js"></script>
+	<script type="text/javascript" src="app/engine.js"></script>
 	<link rel="stylesheet" type="text/css" href="board.css">
+	<script>
+		$(function () { engine.init(); });
+	</script>
 </head>
 <body>
 	<div class="board-holder">
