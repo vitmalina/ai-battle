@@ -1,19 +1,11 @@
 var engine = (function () {
 
-	var places = 'abcdefgh';
-	var field = {
-		a: [],
-		b: [],
-		c: [],
-		d: [],
-		e: [],
-		f: [],
-		g: [],
-		h: []
-	};
+	var field;
+	var places  = 'abcdefgh';
 	var taken   = [];
 	var turn    = 'w'; // whose turn it is
 	var history = [];
+
 	return {
 		reset		: reset,
 		move		: move,
@@ -56,19 +48,23 @@ var engine = (function () {
 		field[f2][i2] = field[f1][i1];
 		field[f1][i1] = '';
 		turn = (turn == 'w' ? 'b' : 'w');
+		var moveCount = engine.getMoves().length;
 		if (turn == 'w') {
 			$('#player1_turn').show();
 			$('#player2_turn').hide();
-			$("#player1_move").html(engine.getMoves().length+" possible moves");
+			$("#player1_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
 			$("#player2_move").html("");
 		} else {
 			$('#player1_turn').hide();
 			$('#player2_turn').show();			
-			$("#player2_move").html(engine.getMoves().length+" possible moves");
+			$("#player2_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
 			$("#player1_move").html("");
 		}
 		board.render($.extend(true, {}, field), [], false, taken);
-		
+		if (moveCount == 0) {
+			alert('Check & Mate! ' + (turn == 'w' ? 'Player 2 WINS.' : 'Player 1 WINS.'));
+			reset();
+		}
 	}
 
 	function getMoves(fld, player) {
