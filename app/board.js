@@ -3,7 +3,6 @@ var board = (function() {
 	var field;
 	var taken;
 	var places = 'abcdefgh';
-	turn;
 
 	return {
 		render 		: render,
