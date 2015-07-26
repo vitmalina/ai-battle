@@ -9,7 +9,7 @@ var board = (function() {
 		notation    : notation
 	}
 
-	function render(fieldCopy, possible) {
+	function render(fieldCopy, possible, clicked) {
 		if (fieldCopy) {
 			field = fieldCopy;
 		}
@@ -22,6 +22,10 @@ var board = (function() {
 						poss = true;
 						console.log((i+(j+1)));
 					}
+				}
+				var extra = "";
+				if (clicked == (i+(j+1))) {
+					extra = "-webkit-box-shadow: inset 0px 0px 100px 0px rgba(61,106,242,1);";
 				}
 				var snip = "";
 				if (poss) {
@@ -69,7 +73,7 @@ var board = (function() {
 						top = 5;
 					}
 
-					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
+					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='" + extra + ";background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
 						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>"
 						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>" 
 						 +		snip 
@@ -93,7 +97,7 @@ var board = (function() {
 			}
 		} 
 		console.log('-->', poss);
-		board.render(null, poss);
+		board.render(null, poss, (i+(j+1)));
 	}
 
 	function notation() {
