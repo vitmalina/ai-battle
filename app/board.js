@@ -24,7 +24,6 @@ var board = (function() {
 				for (var n = 0; n < possible.length; n++) {
 					if (possible[n].substr(3,2) == (i+(j+1))) {
 						poss = true;
-						console.log((i+(j+1)));
 					}
 				}
 				var extra = "";
@@ -100,7 +99,6 @@ var board = (function() {
 				poss.push(moves[n]);
 			}
 		} 
-		console.log('-->', poss);
 		board.render(null, poss, (i+(j+1)), false);
 	}
 

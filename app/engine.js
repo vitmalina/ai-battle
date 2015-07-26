@@ -71,39 +71,41 @@ var engine = (function () {
 		
 	}
 
-	function getMoves() {
-		var pl1 = turn;
+	function getMoves(fld, player) {
+		if (fld == null) fld = field;
+		var pl1 = (player ? player : turn);
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
-		var moves = [];
-		for (var f in field) {
+		var moves  = [];
+		var vCheck = (arguments.length > 0 ? false : true);
+		for (var f in fld) {
 			for (var i = 0; i < 8; i++) {
-				var piece = field[f][i];
+				var piece = fld[f][i];
 				if (piece[0] == pl1) {
 					var num = places.indexOf(f);
 					// pawn
 					if (piece[1] == 'p') {
 						// TODO: el pesan, pawn promotion
 						if (pl1 == 'w') {
-							if (i + 1 < 8 && field[f][i+1] == '') addIfValid(piece, f, i, num, i+1); // one forward
-							if (i == 1 && field[f][i+1] == '' && field[f][i+2] == '') addIfValid(piece, f, i, num, i+2); // two forward (if initial)
+							if (i + 1 < 8 && fld[f][i+1] == '') addIfValid(piece, f, i, num, i+1); // one forward
+							if (i == 1 && fld[f][i+1] == '' && fld[f][i+2] == '') addIfValid(piece, f, i, num, i+2); // two forward (if initial)
 							if (num > 0 && i < 8) {
-								var beat = field[places[num-1]][i+1];
+								var beat = fld[places[num-1]][i+1];
 								if (beat != '' && beat[0] == pl2) addIfValid(piece, f, i, num-1, i+1);
 							}
 							if (num < 7 && i < 8) {
-								var beat = field[places[num+1]][i+1];
+								var beat = fld[places[num+1]][i+1];
 								if (beat != '' && beat[0] == pl2) addIfValid(piece, f, i, num+1, i+1);
 							}
 						}
 						if (pl1 == 'b') {
-							if (i - 1 >= 0 && field[f][i-1] == '') addIfValid(piece, f, i, num, i-1); // one forward
-							if (i == 6 && field[f][i-1] == '' && field[f][i-2] == '') addIfValid(piece, f, i, num, i-2); // two forward (if initial)
+							if (i - 1 >= 0 && fld[f][i-1] == '') addIfValid(piece, f, i, num, i-1); // one forward
+							if (i == 6 && fld[f][i-1] == '' && fld[f][i-2] == '') addIfValid(piece, f, i, num, i-2); // two forward (if initial)
 							if (num > 0 && i > 0) {
-								var beat = field[places[num-1]][i-1];
+								var beat = fld[places[num-1]][i-1];
 								if (beat != '' && beat[0] == pl2) addIfValid(piece, f, i, num-1, i-1);
 							}
 							if (num < 7 && i > 0) {
-								var beat = field[places[num+1]][i-1];
+								var beat = fld[places[num+1]][i-1];
 								if (beat != '' && beat[0] == pl2) addIfValid(piece, f, i, num+1, i-1);
 							}
 						}
@@ -219,14 +221,17 @@ var engine = (function () {
 				return false;
 			}
 			// taken by same color piece
-			var beat = field[places[f1]][i1];
+			var beat = fld[places[f1]][i1];
 			if (beat && beat[0] == pl1) {
 				return false;
 			}
 			var mv = f+(i+1)+':'+places[f1]+(i1+1)+(beat ? ':' + beat : '');
-			var fld = pretend($.extend(true, {}, field), mv);
-			// show(fld);
-			moves.push(mv);
+			if (vCheck === true) {
+				var newField = pretend($.extend(true, {}, fld), mv);
+				if (!isCheck(newField, piece[0])) moves.push(mv);
+			} else {
+				moves.push(mv);
+			}
 			return beat;
 		}
 	}
@@ -243,8 +248,16 @@ var engine = (function () {
 		return fld;
 	}
 
-	function isCheck(fld) {
+	function isCheck(fld, pl1) {
 		if (fld == null) fld = field;
+		var pl2 = (pl1 == 'w' ? 'b' : 'w');
+		var res = false;
+		var mv  =  getMoves(fld, pl2);
+		for (var i = 0; i < mv.length; i++) {
+			var tmp = mv[i].split(':');
+			if (tmp.length == 3 && tmp[2] == pl1+'k') res = true;
+		}
+		return res;
 	}
 
 	function show(fld) {
