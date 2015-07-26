@@ -39,8 +39,23 @@ var engine = (function () {
 		};
 	}
 
-	function move() {
-
+	function move(action) {
+		var tmp = action.split(':');
+		var f1  = tmp[0][0];
+		var i1  = parseInt(tmp[0][1]) - 1;
+		var f2  = tmp[1][0];
+		var i2  = parseInt(tmp[1][1]) - 1;
+		field[f2][i2] = field[f1][i1];
+		field[f1][i1] = '';
+		turn = (turn == 'w' ? 'b' : 'w');
+		if (turn == 'w') {
+			$('#player1_turn').show();
+			$('#player2_turn').hide();
+		} else {
+			$('#player1_turn').hide();
+			$('#player2_turn').show();			
+		}
+		board.render($.extend(true, {}, field), [], false);
 	}
 
 	function getMoves() {
