@@ -51,10 +51,10 @@ var engine = (function () {
 			for (var i = 0; i < 8; i++) {
 				var piece = field[f][i];
 				if (piece[0] == pl1) {
+					var num = places.indexOf(f);
 					// pawn
-					if (piece[1] == 'p') {
+					if (piece[1] == 'p1') {
 						// TODO: el pesan, pawn promotion
-						var num = places.indexOf(f);
 						if (pl1 == 'w') {
 							if (i + 1 < 8 && field[f][i+1] == '') moves.push(f+(i+1)+':'+f+(i+2)); // one forward
 							if (i == 1 && field[f][i+1] == '' && field[f][i+2] == '') moves.push(f+(i+1)+':'+f+(i+3)); // two forward (if initial)
@@ -82,12 +82,32 @@ var engine = (function () {
 					}
 					// horse (aka knight)
 					if (piece[1] == 'h') {
-
+						addIfValid(piece, f, i, num + 1, i + 2);
+						addIfValid(piece, f, i, num + 1, i - 2);
+						addIfValid(piece, f, i, num - 1, i + 2);
+						addIfValid(piece, f, i, num - 1, i - 2);
+						addIfValid(piece, f, i, num + 2, i + 1);
+						addIfValid(piece, f, i, num + 2, i - 1);
+						addIfValid(piece, f, i, num - 2, i + 1);
+						addIfValid(piece, f, i, num - 2, i - 1);
 					}
 				}
 			}
 		}
 		return moves;
+
+		function addIfValid(piece, f, i, f1, i1) {
+			// out of the board
+			if (f1 < 0 || f1 > 7 || i1 < 0 || i1 > 7) {
+				return;
+			}
+			// taken by same color piece
+			var beat = field[places[f1]][i1];
+			if (beat && beat[0] == pl1) {
+				return;
+			}
+			moves.push(f+(i+1)+':'+places[f1]+(i1+1)+(beat ? ':' + beat : ''));
+		}
 	}
 
 }());
