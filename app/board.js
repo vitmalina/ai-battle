@@ -76,7 +76,7 @@ var board = (function() {
 						top = 4;
 					}
 					var rotation = "";
-					if (piece.substr(0,1) == "b") {
+					if (engine.turn == "b") {
 						rotation = "transform: rotate(180deg)";
 					}
 
