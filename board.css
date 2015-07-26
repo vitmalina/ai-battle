@@ -1,0 +1,27 @@
+img {
+	position: absolute;
+}
+
+.board-holder {
+	position: absolute;
+	height: 520px;
+	width: 520px;
+	background-size: contain;
+	background-color: black;
+	-webkit-user-select: none;
+}
+
+.board {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	background-color: gray;
+	height: 512px;
+	width: 512px;
+}
+
+.square {
+	position: absolute;
+	height: 64px; 
+	width: 64px;
+}
