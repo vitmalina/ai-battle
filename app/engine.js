@@ -15,20 +15,16 @@ var engine = (function () {
 	var turn  = 'w'; // whose turn it is
 
 	return {
-		init		: init,
 		reset		: reset,
 		move		: move,
 		getMoves	: getMoves
 	}
 
-	function init() {
-		reset();
-		board.render($.extend(true, {}, field), [], false, false);
-		board.notation();
-		$("#player1_move").html(engine.getMoves().length+" possible moves");
-	}
-
 	function reset() {
+		taken = [];
+		turn  = 'w';
+		$('#player1_turn').show();
+		$('#player2_turn').hide();
 		field = {
 			a: ["wr", "wp", "", "", "", "", "bp", "br"],
 			b: ["wh", "wp", "", "", "", "", "bp", "bh"],
@@ -39,6 +35,9 @@ var engine = (function () {
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]
 		};
+		board.render($.extend(true, {}, field), [], false, taken);
+		board.notation();
+		$("#player1_move").html(engine.getMoves().length+" possible moves");
 	}
 
 	function move(action) {
