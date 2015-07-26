@@ -3,7 +3,7 @@ var engine = (function () {
 	var field;
 	var places  = 'abcdefgh';
 	var taken   = [];
-	var turn    = 'w'; // whose turn it is
+	var turn    = 'w'; // whose turn it is 
 	var history = [];
 
 	return {
