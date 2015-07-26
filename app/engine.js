@@ -75,11 +75,11 @@ var engine = (function () {
 							if (i == 1 && field[f][i+1] == '' && field[f][i+2] == '') moves.push(f+(i+1)+':'+f+(i+3)); // two forward (if initial)
 							if (num > 0 && i < 8) {
 								var beat = field[places[num-1]][i+1];
-								if (beat != '' && beat[0] == pl2) moves.push(f+(i+1)+':'+places[num-1]+(i+1)+':'+beat);
+								if (beat != '' && beat[0] == pl2) moves.push(f+(i+1)+':'+places[num-1]+(i+2)+':'+beat);
 							}
 							if (num < 7 && i < 8) {
 								var beat = field[places[num+1]][i+1];
-								if (beat != '' && beat[0] == pl2) moves.push(f+(i+1)+':'+places[num+1]+(i+1)+':'+beat);
+								if (beat != '' && beat[0] == pl2) moves.push(f+(i+1)+':'+places[num+1]+(i+2)+':'+beat);
 							}
 						}
 						if (pl1 == 'b') {
