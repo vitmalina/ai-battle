@@ -3,6 +3,7 @@ var board = (function() {
 	var field;
 	var taken;
 	var places = 'abcdefgh';
+	turn;
 
 	return {
 		render 		: render,
@@ -75,10 +76,14 @@ var board = (function() {
 						left = 5;
 						top = 4;
 					}
+					var rotation = "";
+					if (piece.substr(0,1) == "b") {
+						rotation = "transform: rotate(180deg)";
+					}
 
 					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + ";" + extra + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' "
 						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>"
-						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px'>" 
+						 + "	<img src='img/" + piece + ".png' style='left : " + left + "px; top: " + top + "px;" + rotation + "'>" 
 						 +		snip 
 						 + "</div>";	
 				} else {

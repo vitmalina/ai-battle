@@ -6,6 +6,11 @@ img {
 	position: absolute;
 }
 
+#game_holder {
+	transition: transform 1s;
+	display: inline-block;
+}
+
 .board-holder {
 	position: relative;
 	height: 534px;
@@ -87,9 +92,10 @@ img {
 
 .history {
 	position: absolute;
-	right: -120px;
+	left: 554px;
 	width: 100px;
 	height: 534px;
+	top: 51px;
 	border: 1px solid gray;
 	overflow: auto;
 }
