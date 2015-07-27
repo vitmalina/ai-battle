@@ -9,7 +9,11 @@
 
 	<link rel="stylesheet" type="text/css" href="board.css">
 	<script>
-		$(function () { engine.reset(); });
+		$(function () { engine.init(); });
+		function gameStart() {
+			engine.start($("#player_one_options").val(), $("#player_two_options").val());
+			$(".popup-holder").toggle();
+		}
 	</script>
 </head>
 <body>
@@ -23,9 +27,33 @@
 		<div class="board-holder">
 			<div id="board" class="board">
 			</div>
-			<div class="popup-holder" style="display: none">
+			<div class="popup-holder" style="">
 					<div class="start-menu">
-
+						<table>
+							<tr>
+								<td>White</td>
+								<td>
+									<select id="player_one_options">
+										<option>
+											Human
+										</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>Black</td>
+								<td>
+									<select id="player_two_options">
+										<option>
+											Human
+										</option>
+									</select>
+								</td>
+							</tr>
+						</table>
+						<div class="button" onclick="gameStart()">
+							Start Game
+						</div>
 					</div>
 			</div>
 		</div>

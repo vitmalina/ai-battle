@@ -8,12 +8,11 @@ var engine = (function () {
 		lucy	: 'lucy.js'
 	};
 
-	init();
-
 	return {
 		turn		: '',		// whose turn it is
 		player1		: null,		// white, null is human, otherwise ai name
 		player2		: null,		// black
+		init 		: init,
 		reset		: reset,
 		start 		: start,
 		move		: move,
@@ -44,7 +43,9 @@ var engine = (function () {
 		// this function is here for sand boxing
 		function _register(name, ai) {
 			ais[name] = ai;
+			$("#player_one_options, #player_two_options").append("<option value=\"" + name +"\">" + ais[name].name + "</option>");
 		}
+		reset();
 	}
 
 	function reset() {
@@ -73,6 +74,13 @@ var engine = (function () {
 	}
 
 	function start(player1, player2) { // if null, then it is human
+		console.log(player1, player2);
+		if (player1 == "Human") {
+			player1 = null;
+		}
+		if (player2 == "Human") {
+			player2 = null;
+		}
 		if (engine.turn != '') {
 			console.log('ERROR: game currently in progress. Use engine.reset();');
 			return;
