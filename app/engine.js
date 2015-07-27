@@ -121,14 +121,20 @@ var engine = (function () {
 		var f2  = tmp[1][0];
 		var i2  = parseInt(tmp[1][1]) - 1;
 		if (field[f2][i2] != '') {
-			taken.push(field[f2][i2]); 
+			taken.push(field[f2][i2]);
 		}
-
 		field[f2][i2] = field[f1][i1];
 		field[f1][i1] = '';
+		// white pawn promotion
+		if (engine.turn == 'w' && i2 == 7) {
+			field[f2][i2] = 'wq';
+		}
+		// black pawn promotion
+		if (engine.turn == 'b' && i2 == 0) {
+			field[f2][i2] = 'bq';
+		}
 		engine.turn = (engine.turn == 'w' ? 'b' : 'w');
 		var moveCount = engine.getMoves().length;
-	
 		if (engine.turn == 'w') {
 			$('#player1_turn').show();
 			$('#player2_turn').hide();
