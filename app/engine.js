@@ -194,26 +194,33 @@ var engine = (function () {
 			}
 		}
 		if (moveCount == 0) {
-			if (engine.turn == 'w') { // black wins (player 2)
-				$('#player1_turn').hide();
-				$('#player2_turn').html('Winner').show();
-				$('.endgame-holder').toggle();
-				if (engine.player1 == null) {
-					$('.endgame').html('Black has won!');
-				} else {
-					$('.endgame').html(ais[engine.player2].name + ' (black) has won!');
-				}
-	
-			} else { // white wins (player 1)
-				$('#player1_turn').html('Winner').show();
-				$('.endgame-holder').toggle();
-				if (engine.player1 == null && engine.player2 == null) $('.endgame-holder').css("transform", "rotate(180deg)");
-				if (engine.player1 == null) {
-					$('.endgame').html('White has won!');
-				} else {
-					$('.endgame').html(ais[engine.player1].name + ' (white) has won!');
+			// stale mate
+			if (!isCheck(engine.turn)) {
+				$('#player1_turn').html('Draw').show();
+				$('#player2_turn').html('Draw').show();
+				$('.endgame').html('Stale Mate');
+			} else {
+				if (engine.turn == 'w') { // black wins (player 2)
+					$('#player1_turn').hide();
+					$('#player2_turn').html('Winner').show();
+					if (engine.player1 == null) {
+						$('.endgame').html('Black has won!');
+					} else {
+						$('.endgame').html(ais[engine.player2].name + ' (black) has won!');
+					}
+		
+				} else { // white wins (player 1)
+					$('#player1_turn').html('Winner').show();
+					if (engine.player1 == null && engine.player2 == null) $('.endgame-holder').css("transform", "rotate(180deg)");
+					if (engine.player1 == null) {
+						$('.endgame').html('White has won!');
+					} else {
+						$('.endgame').html(ais[engine.player1].name + ' (white) has won!');
+					}
 				}
 			}
+			$('.endgame-holder').show();
+			board.render($.extend(true, {}, field), [], false, taken);
 			return;
 		}
 		var html = "";
