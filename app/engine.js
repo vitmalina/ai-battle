@@ -126,12 +126,12 @@ var engine = (function () {
 	function move(action) {
 		if (engine.turn == '') return; // no game in progress
 		history.push(action);
-		if (history.length >= 500) {
+		if (history.length >= 300) {
 			engine.turn = '';
 			$('#player1_turn').html('Draw').show();
 			$('#player2_turn').html('Draw').show();
-			$('#player1_move').html("Reached 500 moves");
-			$('#player2_move').html("Reached 500 moves");
+			$('#player1_move').html("Reached 300 moves");
+			$('#player2_move').html("Reached 300 moves");
 			return;
 		}
 		var tmp = action.split(':');
