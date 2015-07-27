@@ -50,7 +50,7 @@ var board = (function() {
 
  				if (piece) { 
 					var rotation = ""; 
-					if (engine.turn == "b") { 
+					if (engine.turn == "b" && engine.player1 == null && engine.player2 == null) { 
 						rotation = "transform: rotate(180deg)"; 
 					} 
 

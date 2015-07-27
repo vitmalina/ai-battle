@@ -4,10 +4,18 @@ var engine = (function () {
 	var places  = 'abcdefgh';
 	var taken   = [];
 	var history = [];
+	var ais	 	= {
+		lucy	: 'lucy.js'
+	};
+
+	init();
 
 	return {
-		turn		: 'w',		// whose turn it is
+		turn		: '',		// whose turn it is
+		player1		: null,		// white, null is human, otherwise ai name
+		player2		: null,		// black
 		reset		: reset,
+		start 		: start,
 		move		: move,
 		getMoves	: getMoves,
 		pretend		: pretend,
@@ -16,13 +24,36 @@ var engine = (function () {
 	}
 
 	function init() {
-
+		for (var a in ais) {
+			$.ajax({
+					url   : 'ai/'+ ais[a],
+					async : false
+				})
+				.done(function (text, status, xhr) {
+					var engine, field, places, taken, history, ais;
+					eval(text);
+					if (ai.name == null || typeof ai.next != 'function') {
+						console.log('ERROR: cannot load '+ a + '.ai. File needs to look like "var ai = { name: "name", next: function() {...} }');	
+					}
+					_register(ai.name.toLowerCase(), ai);
+				})
+				.fail(function () {
+					console.log('ERROR: cannot load '+ ai);
+				});
+		}
+		// this function is here for sand boxing
+		function _register(name, ai) {
+			ais[name] = ai;
+		}
 	}
 
 	function reset() {
-		taken = [];
-		engine.turn  = 'w';
-		$('#player1_turn').show();
+		engine.turn = '';
+		engine.player1 = null;
+		engine.player2 = null;
+		$('#player1_name').html('');
+		$('#player2_name').html('');
+		$('#player1_turn').hide();
 		$('#player2_turn').hide();
 		field = {
 			a: ["wr", "wp", "", "", "", "", "bp", "br"],
@@ -34,14 +65,56 @@ var engine = (function () {
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]
 		};
+		history = [];
+		taken 	= [];
 		board.render($.extend(true, {}, field), [], false, taken);
 		board.notation();
+		// start();
+	}
+
+	function start(player1, player2) { // if null, then it is human
+		if (engine.turn != '') {
+			console.log('ERROR: game currently in progress. Use engine.reset();');
+			return;
+		}
+		if (player1 != null && ais[player1] == null) {
+			console.log('ERROR: unrecognize ai "'+ player1 + '"');
+			return
+		}
+		if (player1 != null && ais[player1] == null) {
+			console.log('ERROR: unrecognize ai "'+ player1 + '"');
+			return
+		}
+		reset();
+		engine.turn  = 'w';
+		$('#player1_turn').show();
 		$("#player1_move").html(engine.getMoves().length+" possible moves");
-		history = [];
+		// player names
+		engine.player1 = player1;
+		engine.player2 = player2;
+		$("#player1_name").html(player1 ? ais[player1].name + ' (white)' : 'Human (white)');
+		$("#player2_name").html(player2 ? ais[player2].name + ' (black)' : 'Human (black)');
+		$('#player1_turn').html('Your Turn');
+		$('#player2_turn').html('Your Turn');
+		$('#player1_move').html('');
+		$('#player2_move').html('');
+		// if ai, make a move
+		if (player1 != null) {
+			move(ais[player1].next(engine.field, getMoves()));
+		}
 	}
 
 	function move(action) {
+		if (engine.turn == '') return; // no game in progress
 		history.push(action);
+		if (history.length >= 500) {
+			engine.turn = '';
+			$('#player1_turn').html('Draw').show();
+			$('#player2_turn').html('Draw').show();
+			$('#player1_move').html("Reached 500 moves");
+			$('#player2_move').html("Reached 500 moves");
+			return;
+		}
 		var tmp = action.split(':');
 		var f1  = tmp[0][0];
 		var i1  = parseInt(tmp[0][1]) - 1;
@@ -61,18 +134,29 @@ var engine = (function () {
 			$('#player2_turn').hide();
 			$("#player1_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
 			$("#player2_move").html("");
-			$("#game_holder, .player1, .player2").css("transform", "rotate(0deg)");
+			if (engine.player1 == null && engine.player2 == null) {
+				$("#game_holder, .player1, .player2").css("transform", "rotate(0deg)");
+			}
 		} else {
 			$('#player1_turn').hide();
 			$('#player2_turn').show();			
 			$("#player2_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
 			$("#player1_move").html("");
-			$("#game_holder, .player1, .player2").css("transform", "rotate(180deg)");
+			if (engine.player1 == null && engine.player2 == null) {
+				$("#game_holder, .player1, .player2").css("transform", "rotate(180deg)");
+			}
 		}
 		board.render($.extend(true, {}, field), [], false, taken);
 		if (moveCount == 0) {
-			alert('Check & Mate! ' + (engine.turn == 'w' ? 'Player 2 WINS.' : 'Player 1 WINS.'));
-			reset();
+			if (engine.turn == 'w') { // black wins (player 2)
+				$('#player1_turn').hide();
+				$('#player2_turn').html('Winner').show();
+			} else { // white wins (player 1)
+				$('#player1_turn').html('Winner').show();
+				$('#player2_turn').hide();
+			}
+			engine.turn = '';
+			return;
 		}
 		var html = "";
 		for (var i = 0; i < history.length; i++) {
@@ -87,10 +171,19 @@ var engine = (function () {
 			}
 		}
 		$("#history").html(html);
-
+		// check if it is ai, then get next move
+		setTimeout(function () {
+			if (engine.turn == 'w' && engine.player1 != null) {
+				move(ais[engine.player1].next(engine.field, getMoves()));
+			}
+			if (engine.turn == 'b' && engine.player2 != null) {
+				move(ais[engine.player2].next(engine.field, getMoves()));
+			}
+		}, 1);
 	}
 
 	function getMoves(fld, player) {
+		if (engine.turn == '') return []; // no game in progress
 		if (fld == null) fld = field;
 		var pl1 = (player ? player : engine.turn);
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
@@ -107,11 +200,11 @@ var engine = (function () {
 						if (pl1 == 'w') {
 							if (i + 1 < 8 && fld[f][i+1] == '') addIfValid(piece, f, i, num, i+1); // one forward
 							if (i == 1 && fld[f][i+1] == '' && fld[f][i+2] == '') addIfValid(piece, f, i, num, i+2); // two forward (if initial)
-							if (num > 0 && i < 8) {
+							if (num > 0 && i < 7) {
 								var beat = fld[places[num-1]][i+1];
 								if (beat != '' && beat[0] == pl2) addIfValid(piece, f, i, num-1, i+1);
 							}
-							if (num < 7 && i < 8) {
+							if (num < 7 && i < 7) {
 								var beat = fld[places[num+1]][i+1];
 								if (beat != '' && beat[0] == pl2) addIfValid(piece, f, i, num+1, i+1);
 							}
