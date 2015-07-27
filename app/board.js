@@ -47,16 +47,16 @@ var board = (function() {
 				if ((places.indexOf(i)+block)%2) { 
 					color = "#B58863"; 
 				} 
-				
+
  				if (piece) { 
 					var rotation = ""; 
 					if (engine.turn == "b") { 
 						rotation = "transform: rotate(180deg)"; 
 					} 
 
- 					html += "<div id='" + places.indexOf(i) + ", " + j + "' class='square' style='background-color: " + color + ";" + extra + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' " 
+ 					html += "<div class='square' style='background-color: " + color + ";" + extra + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' " 
 						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>" 
-						 + "	<img src='img/" + piece + ".png' style='" + rotation + "; height: 64px; width: 64px'>"  
+						 + "	<img src='img/" + piece + ".png' style='" + rotation + "' class='piece' id='" + places.indexOf(i) + "-" + j + "'>"  
 						 +		snip  
 						 + "</div>";	 
 				} else { 

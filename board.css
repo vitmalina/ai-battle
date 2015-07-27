@@ -7,7 +7,7 @@ img {
 }
 
 #game_holder {
-	transition: transform 1s;
+	transition: transform 0.75s;
 	display: inline-block;
 }
 
@@ -88,6 +88,12 @@ img {
 	margin-right: 10px;
 	font-size: 14px;
 	float: right;
+}
+
+.piece {
+	height: 64px; 
+	width: 64px;
+	transition: translate 1s;
 }
 
 .history {
