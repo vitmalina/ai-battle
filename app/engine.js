@@ -165,9 +165,15 @@ var engine = (function () {
 			if (engine.turn == 'w') { // black wins (player 2)
 				$('#player1_turn').hide();
 				$('#player2_turn').html('Winner').show();
+				$('.endgame-holder').toggle();
+				$('.endgame').html('Black has won!');
+	
 			} else { // white wins (player 1)
 				$('#player1_turn').html('Winner').show();
-				$('#player2_turn').hide();
+				$('.endgame-holder').toggle();
+				$('.endgame-holder').css("transform", "rotate(180deg)");
+				$('.endgame').html('White has won!');
+
 			}
 			engine.turn = '';
 			return;
