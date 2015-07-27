@@ -228,7 +228,7 @@ var engine = (function () {
 			} else if (engine.turn == 'b' && engine.player2 != null) {
 				move(ais[engine.player2].next($.extend(true, {}, field), getMoves()));
 			}
-		}, 1);
+		}, 100);
 		board.render($.extend(true, {}, field), [], false, taken);
 	}
 
