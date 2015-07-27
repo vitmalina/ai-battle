@@ -9,8 +9,10 @@ var engine = (function () {
 		andi	: 'andi.js'
 	};
 	var pretend = {
+		field   : {},
 		move	: pretendMove,
-		show	: show,
+		show	: pretendShow,
+		reset	: pretendReset,
 		isCheck	: isCheck
 	};
 
@@ -234,7 +236,7 @@ var engine = (function () {
 			} else if (engine.turn == 'b' && engine.player2 != null) {
 				move(ais[engine.player2].next($.extend(true, {}, field), getMoves()));
 			}
-		}, 100);
+		}, 1);
 		board.render($.extend(true, {}, field), [], false, taken);
 	}
 
@@ -440,19 +442,11 @@ var engine = (function () {
 		}
 	}
 
-	function pretendMove(fld, mv) {
-		if (fld == null) fld = $.extend(true, {}, field);
-		var tmp = mv.split(':');
-		var f1  = tmp[0][0];
-		var i1  = parseInt(tmp[0][1]) - 1;
-		var f2  = tmp[1][0];
-		var i2  = parseInt(tmp[1][1]) - 1;
-		fld[f2][i2] = fld[f1][i1];
-		fld[f1][i1] = '';
-		return fld;
-	}
-
 	function isCheck(fld, pl1) {
+		if (arguments.length != 2) {
+			mv  = fld;
+			fld = this.field;
+		}
 		if (fld == null) fld = field;
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var res = false;
@@ -464,8 +458,25 @@ var engine = (function () {
 		return res;
 	}
 
-	function show(fld) {
-		if (fld == null) fld = field;
+	function pretendMove(fld, mv) {
+		if (arguments.length != 2) {
+			mv  = fld;
+			fld = null;
+		}
+		if (fld == null) fld = $.extend(true, {}, field);
+		var tmp = mv.split(':');
+		var f1  = tmp[0][0];
+		var i1  = parseInt(tmp[0][1]) - 1;
+		var f2  = tmp[1][0];
+		var i2  = parseInt(tmp[1][1]) - 1;
+		fld[f2][i2] = fld[f1][i1];
+		fld[f1][i1] = '';
+		if (arguments.length != 2) this.field = fld;
+		return fld;
+	}
+
+	function pretendShow(fld) {
+		if (fld == null) fld = this.field;
 		for (var i = 7; i >= 0; i--) {
 			var tmp = '';
 			for (var f in fld) {
@@ -475,6 +486,14 @@ var engine = (function () {
 		}
 		console.log('   a  b  c  d  e  f  g  h');
 		console.log('-------------------------');
+	}
+
+	function pretendReset(fld) {
+		if (fld == null) {
+			consoel.log('ERROR: please send field to reset to.');
+			return;
+		}
+		this.field = fld;
 	}
 
 }());
