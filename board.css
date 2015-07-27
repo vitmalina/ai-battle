@@ -99,9 +99,19 @@ img {
 .history {
 	position: absolute;
 	left: 554px;
-	width: 150px;
-	height: 534px;
+	width: 152px;
+	height: 524px;
 	top: 51px;
+	border: 1px solid gray;
+	overflow: auto;
+}
+
+.history_buttons {
+	position: absolute;
+	left: 554px;
+	width: 152px;
+	height: 40px;
+	top: 580px;
 	border: 1px solid gray;
 	overflow: auto;
 }

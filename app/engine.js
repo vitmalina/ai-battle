@@ -8,6 +8,7 @@ var engine = (function () {
 		lucy	: 'lucy.js',
 		andi	: 'andi.js'
 	};
+	var gameOver = false;
 	var pretend = {
 		field   : {},
 		move	: pretendMove,
@@ -15,6 +16,7 @@ var engine = (function () {
 		reset	: pretendReset,
 		isCheck	: isCheck
 	};
+	var inHistory = 0;
 
 	return {
 		turn		: '',		// whose turn it is
@@ -27,7 +29,9 @@ var engine = (function () {
 		getMoves	: getMoves,
 		pretend		: pretendMove,
 		isCheck		: isCheck,
-		historyPoint: historyPoint
+		historyPoint: historyPoint,
+		gameOver    : gameOver,
+		inHistory   : inHistory,
 	}
 
 	function init() {
@@ -133,6 +137,7 @@ var engine = (function () {
 			$('#player2_turn').html('Draw').show();
 			$('#player1_move').html("Reached 300 moves");
 			$('#player2_move').html("Reached 300 moves");
+			engine.gameOver = true;
 			return;
 		}
 		var tmp = action.split(':');
@@ -200,6 +205,7 @@ var engine = (function () {
 				$('#player1_turn').html('Draw').show();
 				$('#player2_turn').html('Draw').show();
 				$('.endgame').html('Stale Mate');
+				engine.gameOver = true
 			} else {
 				if (engine.turn == 'w') { // black wins (player 2)
 					$('#player1_turn').hide();
@@ -208,6 +214,7 @@ var engine = (function () {
 						$('.endgame').html('Black has won!');
 					} else {
 						$('.endgame').html(ais[engine.player2].name + ' (black) has won!');
+						engine.gameOver = true
 					}
 		
 				} else { // white wins (player 1)
@@ -217,6 +224,7 @@ var engine = (function () {
 						$('.endgame').html('White has won!');
 					} else {
 						$('.endgame').html(ais[engine.player1].name + ' (white) has won!');
+						engine.gameOver = true
 					}
 				}
 			}
@@ -505,7 +513,8 @@ var engine = (function () {
 	}
 
 	function historyPoint(place) {
-		if (engine.turn == "") {
+		if (engine.gameOver && place >= 0 && place < history.length) {
+			engine.inHistory = place;
 			var initField = {
 				a: ["wr", "wp", "", "", "", "", "bp", "br"],
 				b: ["wh", "wp", "", "", "", "", "bp", "bh"],
@@ -516,11 +525,30 @@ var engine = (function () {
 				g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 				h: ["wr", "wp", "", "", "", "", "bp", "br"]
 			};
-			for (var i = 0; i < place; i++) {
+			var historyLoc = -1;
+			for (var i = 0; i <= place; i++) {
 				var parts = history[i].split(":");
 				pretendMove(initField, (parts[0] + ":" + parts[1]));
+				historyLoc++;
 			}
 			board.render($.extend(true, {}, initField), [], false, taken);
+			var html = "";
+			for (var i = 0; i < history.length; i++) {
+				var color = "";
+				if (i <= historyLoc) {
+					color = "background-color: blue; color: white";
+				}
+				if (i/2 == Math.floor(i/2)) {
+					html +=   "<div class='block' style='width: 75px; height: 20px; left: 0px; top: " + (Math.floor(i/2)*25) + "px; border-right: 1px solid black; text-align: center; border-bottom: 1px solid gray; " + color + "' onclick='engine.historyPoint(" + i + ")'>"
+							+ history[i]
+							+ "</div>";
+				} else {
+					html +=   "<div class='block' style='width: 75px; height: 20px; right: 0px; top: " + (Math.floor(i/2)*25) + "px; text-align: center; border-bottom: 1px solid gray; " + color + "' onclick='engine.historyPoint(" + i + ")'>"
+							+ history[i]
+							+ "</div>";
+				}
+			}
+			$("#history").html(html);
 		}
 	}
 
