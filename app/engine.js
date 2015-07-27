@@ -26,7 +26,8 @@ var engine = (function () {
 		move		: move,
 		getMoves	: getMoves,
 		pretend		: pretendMove,
-		isCheck		: isCheck
+		isCheck		: isCheck,
+		historyPoint: historyPoint
 	}
 
 	function init() {
@@ -226,11 +227,11 @@ var engine = (function () {
 		var html = "";
 		for (var i = 0; i < history.length; i++) {
 			if (i/2 == Math.floor(i/2)) {
-				html +=   "<div class='block' style='width: 50px; height: 20px; left: 0px; top: " + (Math.floor(i/2)*25) + "px; border-right: 1px solid black; text-align: center; border-bottom: 1px solid gray'>"
+				html +=   "<div class='block' style='width: 75px; height: 20px; left: 0px; top: " + (Math.floor(i/2)*25) + "px; border-right: 1px solid black; text-align: center; border-bottom: 1px solid gray' onclick='engine.historyPoint(" + i + ")'>"
 						+ history[i]
 						+ "</div>";
 			} else {
-				html +=   "<div class='block' style='width: 48px; height: 20px; right: 0px; top: " + (Math.floor(i/2)*25) + "px; text-align: center; border-bottom: 1px solid gray'>"
+				html +=   "<div class='block' style='width: 73px; height: 20px; right: 0px; top: " + (Math.floor(i/2)*25) + "px; text-align: center; border-bottom: 1px solid gray' onclick='engine.historyPoint(" + i + ")'>"
 						+ history[i]
 						+ "</div>";
 			}
@@ -501,6 +502,26 @@ var engine = (function () {
 			return;
 		}
 		this.field = fld;
+	}
+
+	function historyPoint(place) {
+		if (engine.turn == "") {
+			var initField = {
+				a: ["wr", "wp", "", "", "", "", "bp", "br"],
+				b: ["wh", "wp", "", "", "", "", "bp", "bh"],
+				c: ["wb", "wp", "", "", "", "", "bp", "bb"],
+				d: ["wq", "wp", "", "", "", "", "bp", "bq"],
+				e: ["wk", "wp", "", "", "", "", "bp", "bk"],
+				f: ["wb", "wp", "", "", "", "", "bp", "bb"],
+				g: ["wh", "wp", "", "", "", "", "bp", "bh"],
+				h: ["wr", "wp", "", "", "", "", "bp", "br"]
+			};
+			for (var i = 0; i < place; i++) {
+				var parts = history[i].split(":");
+				pretendMove(initField, (parts[0] + ":" + parts[1]));
+			}
+			board.render($.extend(true, {}, initField), [], false, taken);
+		}
 	}
 
 }());

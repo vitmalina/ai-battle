@@ -99,11 +99,15 @@ img {
 .history {
 	position: absolute;
 	left: 554px;
-	width: 100px;
+	width: 150px;
 	height: 534px;
 	top: 51px;
 	border: 1px solid gray;
 	overflow: auto;
+}
+
+.history::-webkit-scrollbar { 
+    display: none; 
 }
 
 .popup-holder {
