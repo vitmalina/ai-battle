@@ -111,7 +111,7 @@ var engine = (function () {
 		$('#player2_move').html('');
 		// if ai, make a move
 		if (player1 != null) {
-			move(ais[player1].next($.extend(true, {}, engine.field), getMoves()));
+			move(ais[player1].next($.extend(true, {}, field), getMoves()));
 		}
 	}
 
@@ -224,9 +224,9 @@ var engine = (function () {
 		// check if it is ai, then get next move
 		setTimeout(function () {
 			if (engine.turn == 'w' && engine.player1 != null) {
-				move(ais[engine.player1].next($.extend(true, {}, engine.field), getMoves()));
+				move(ais[engine.player1].next($.extend(true, {}, field), getMoves()));
 			} else if (engine.turn == 'b' && engine.player2 != null) {
-				move(ais[engine.player2].next($.extend(true, {}, engine.field), getMoves()));
+				move(ais[engine.player2].next($.extend(true, {}, field), getMoves()));
 			}
 		}, 1);
 		board.render($.extend(true, {}, field), [], false, taken);
