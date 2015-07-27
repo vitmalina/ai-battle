@@ -51,8 +51,12 @@ var engine = (function () {
 			$("#player_one_options, #player_two_options").append("<option value=\"" + name +"\">" + ais[name].name + "</option>");
 		}
 		reset();
-		$("#player_one_options").val('lucy');
-		$("#player_two_options").val('andi');
+		var config = localStorage.getItem('ai-battle');
+		if (config) {
+			config = JSON.parse(config);
+			$("#player_one_options").val(config.player1 || 'Human');
+			$("#player_two_options").val(config.player2 || 'Human');
+		} 
 	}
 
 	function reset() {
@@ -95,6 +99,8 @@ var engine = (function () {
 			console.log('ERROR: unrecognize ai "'+ player1 + '"');
 			return
 		}
+		// save last oponents
+		localStorage.setItem('ai-battle', JSON.stringify({ player1: player1, player2: player2 }));
 		reset();
 		engine.turn  = 'w';
 		$(".popup-holder").hide();
