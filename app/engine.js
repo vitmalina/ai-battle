@@ -126,11 +126,11 @@ var engine = (function () {
 		field[f2][i2] = field[f1][i1];
 		field[f1][i1] = '';
 		// white pawn promotion
-		if (engine.turn == 'w' && i2 == 7) {
+		if (engine.turn == 'w' && i2 == 7 && field[f2][i2] == 'wp') {
 			field[f2][i2] = 'wq';
 		}
 		// black pawn promotion
-		if (engine.turn == 'b' && i2 == 0) {
+		if (engine.turn == 'b' && i2 == 0 && field[f2][i2] == 'bp') {
 			field[f2][i2] = 'bq';
 		}
 		engine.turn = (engine.turn == 'w' ? 'b' : 'w');
@@ -181,8 +181,7 @@ var engine = (function () {
 		setTimeout(function () {
 			if (engine.turn == 'w' && engine.player1 != null) {
 				move(ais[engine.player1].next(engine.field, getMoves()));
-			}
-			if (engine.turn == 'b' && engine.player2 != null) {
+			} else if (engine.turn == 'b' && engine.player2 != null) {
 				move(ais[engine.player2].next(engine.field, getMoves()));
 			}
 		}, 1);
@@ -202,7 +201,7 @@ var engine = (function () {
 					var num = places.indexOf(f);
 					// pawn
 					if (piece[1] == 'p') {
-						// TODO: el pesan, pawn promotion
+						// TODO: el pesan
 						if (pl1 == 'w') {
 							if (i + 1 < 8 && fld[f][i+1] == '') addIfValid(piece, f, i, num, i+1); // one forward
 							if (i == 1 && fld[f][i+1] == '' && fld[f][i+2] == '') addIfValid(piece, f, i, num, i+2); // two forward (if initial)
