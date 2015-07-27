@@ -8,6 +8,11 @@ var engine = (function () {
 		lucy	: 'lucy.js',
 		andi	: 'andi.js'
 	};
+	var pretend = {
+		move	: pretendMove,
+		show	: show,
+		isCheck	: isCheck
+	};
 
 	return {
 		turn		: '',		// whose turn it is
@@ -18,9 +23,8 @@ var engine = (function () {
 		start 		: start,
 		move		: move,
 		getMoves	: getMoves,
-		pretend		: pretend,
-		isCheck		: isCheck,
-		show		: show
+		pretend		: pretendMove,
+		isCheck		: isCheck
 	}
 
 	function init() {
@@ -47,6 +51,8 @@ var engine = (function () {
 			$("#player_one_options, #player_two_options").append("<option value=\"" + name +"\">" + ais[name].name + "</option>");
 		}
 		reset();
+		$("#player_one_options").val('lucy');
+		$("#player_two_options").val('andi');
 	}
 
 	function reset() {
@@ -75,13 +81,8 @@ var engine = (function () {
 	}
 
 	function start(player1, player2) { // if null, then it is human
-		console.log(player1, player2);
-		if (player1 == "Human") {
-			player1 = null;
-		}
-		if (player2 == "Human") {
-			player2 = null;
-		}
+		if (player1 == "Human") player1 = null;
+		if (player2 == "Human") player2 = null;
 		if (engine.turn != '') {
 			console.log('ERROR: game currently in progress. Use engine.reset();');
 			return;
@@ -96,6 +97,7 @@ var engine = (function () {
 		}
 		reset();
 		engine.turn  = 'w';
+		$(".popup-holder").hide();
 		$('#player1_turn').show();
 		$("#player1_move").html(engine.getMoves().length+" possible moves");
 		// player names
@@ -109,7 +111,7 @@ var engine = (function () {
 		$('#player2_move').html('');
 		// if ai, make a move
 		if (player1 != null) {
-			move(ais[player1].next(engine.field, getMoves()));
+			move(ais[player1].next($.extend(true, {}, engine.field), getMoves()));
 		}
 	}
 
@@ -216,9 +218,9 @@ var engine = (function () {
 		// check if it is ai, then get next move
 		setTimeout(function () {
 			if (engine.turn == 'w' && engine.player1 != null) {
-				move(ais[engine.player1].next(engine.field, getMoves()));
+				move(ais[engine.player1].next($.extend(true, {}, engine.field), getMoves()));
 			} else if (engine.turn == 'b' && engine.player2 != null) {
-				move(ais[engine.player2].next(engine.field, getMoves()));
+				move(ais[engine.player2].next($.extend(true, {}, engine.field), getMoves()));
 			}
 		}, 1);
 		board.render($.extend(true, {}, field), [], false, taken);
@@ -378,11 +380,9 @@ var engine = (function () {
 							var parts = history[n].split(":");
 							if (rooks[1] == parts[0] || rooks[1] == parts[1]) {
 								castleLeft = false;
-								console.log("can not castle left");
 							}
 							if (rooks[0] == parts[0] || rooks[0] == parts[1]) {
 								castleRight = false;
-								console.log("can not castle right");
 							}
 							if (king == parts[0] || king == parts[1]) {
 								castleRight = false;
@@ -392,10 +392,9 @@ var engine = (function () {
 						var rookPos = parseInt(rooks[0].substr(1, 1))-1;
 						
 						if (vCheck === true) {
-							console.log('dfdfd');
-							var newField = pretend($.extend(true, {}, fld), 'e' + (rookPos+1) + ':f' + (rookPos+1));
+							var newField = pretendMove($.extend(true, {}, fld), 'e' + (rookPos+1) + ':f' + (rookPos+1));
 							if (isCheck(newField, engine.turn)) castleLeft = false;
-							var newField = pretend($.extend(true, {}, fld), 'e' + (rookPos+1) + ':d' + (rookPos+1));
+							var newField = pretendMove($.extend(true, {}, fld), 'e' + (rookPos+1) + ':d' + (rookPos+1));
 							if (isCheck(newField, engine.turn)) castleRight = false;
 						}
 
@@ -420,7 +419,7 @@ var engine = (function () {
 			}
 			var mv = f+(i+1)+':'+places[f1]+(i1+1)+(beat ? ':' + beat : '');
 			if (vCheck === true) {
-				var newField = pretend($.extend(true, {}, fld), mv);
+				var newField = pretendMove($.extend(true, {}, fld), mv);
 				if (!isCheck(newField, piece[0])) moves.push(mv);
 			} else {
 				moves.push(mv);
@@ -429,7 +428,7 @@ var engine = (function () {
 		}
 	}
 
-	function pretend(fld, mv) {
+	function pretendMove(fld, mv) {
 		if (fld == null) fld = $.extend(true, {}, field);
 		var tmp = mv.split(':');
 		var f1  = tmp[0][0];
