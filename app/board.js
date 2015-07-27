@@ -40,9 +40,10 @@ var board = (function() {
  				var color = "#F0D9B5"; 
 				var block = -1; 
 				if (j%2) { 
-					block = 1; 
-				} else { 
 					block = 0; 
+				} else { 
+					
+					block = 1; 
 				} 
 				if ((places.indexOf(i)+block)%2) { 
 					color = "#B58863"; 
@@ -54,13 +55,13 @@ var board = (function() {
 						rotation = "transform: rotate(180deg)"; 
 					} 
 
- 					html += "<div class='square' style='background-color: " + color + ";" + extra + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' " 
+ 					html += "<div class='square' style='background-color: " + color + ";" + extra + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px' " 
 						 + "		onclick='board.selectPiece(" + places.indexOf(i) + ", " + j + ")'>" 
 						 + "	<img src='img/" + piece + ".png' style='" + rotation + "' class='piece' id='" + places.indexOf(i) + "-" + j + "'>"  
 						 +		snip  
 						 + "</div>";	 
 				} else { 
-					html += "<div class='square' style='background-color: " + color + "; right: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'>" + snip + "</div>"; 
+					html += "<div class='square' style='background-color: " + color + "; left: " + (places.indexOf(i)*64) + "px; bottom: " + (j*64) + "px'>" + snip + "</div>"; 
 				} 
 				 
 			} 
@@ -68,7 +69,8 @@ var board = (function() {
 		$("#board").html(html); 
 	} 
 
- 	function selectPiece(i, j) { 
+ 	function selectPiece(i, j) {
+ 		console.log('selectPiece'); 
 		var i = places[i]; 
 		var moves = engine.getMoves(); 
 		var poss = []; 

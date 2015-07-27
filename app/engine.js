@@ -5,7 +5,8 @@ var engine = (function () {
 	var taken   = [];
 	var history = [];
 	var ais	 	= {
-		lucy	: 'lucy.js'
+		lucy	: 'lucy.js',
+		andi	: 'andi.js'
 	};
 
 	return {
@@ -60,8 +61,8 @@ var engine = (function () {
 			a: ["wr", "wp", "", "", "", "", "bp", "br"],
 			b: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			c: ["wb", "wp", "", "", "", "", "bp", "bb"],
-			d: ["wk", "wp", "", "", "", "", "bp", "bk"],
-			e: ["wq", "wp", "", "", "", "", "bp", "bq"],
+			d: ["wq", "wp", "", "", "", "", "bp", "bq"],
+			e: ["wk", "wp", "", "", "", "", "bp", "bk"],
 			f: ["wb", "wp", "", "", "", "", "bp", "bb"],
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]
@@ -141,6 +142,28 @@ var engine = (function () {
 		if (engine.turn == 'b' && i2 == 0 && field[f2][i2] == 'bp') {
 			field[f2][i2] = 'bq';
 		}
+		// casteling (white)
+		if (engine.turn == 'w') {
+			if (action == 'e1:g1') {
+				field['f'][0] = 'wr';
+				field['h'][0] = '';
+			}
+			if (action == 'e1:c1') {
+				field['d'][0] = 'wr';
+				field['a'][0] = '';
+			}
+		}
+		// casteling (black)
+		if (engine.turn == 'b') {
+			if (action == 'e8:g8') {
+				field['f'][7] = 'br';
+				field['h'][7] = '';
+			}
+			if (action == 'e8:c8') {
+				field['d'][7] = 'br';
+				field['a'][7] = '';
+			}
+		}
 		engine.turn = (engine.turn == 'w' ? 'b' : 'w');
 		var moveCount = engine.getMoves().length;
 		if (engine.turn == 'w') {
@@ -160,7 +183,6 @@ var engine = (function () {
 				$("#game_holder, .player1, .player2").css("transform", "rotate(180deg)");
 			}
 		}
-		board.render($.extend(true, {}, field), [], false, taken);
 		if (moveCount == 0) {
 			if (engine.turn == 'w') { // black wins (player 2)
 				$('#player1_turn').hide();
@@ -171,7 +193,7 @@ var engine = (function () {
 			} else { // white wins (player 1)
 				$('#player1_turn').html('Winner').show();
 				$('.endgame-holder').toggle();
-				$('.endgame-holder').css("transform", "rotate(180deg)");
+				if (engine.player1 != null || engine.player2 != null) $('.endgame-holder').css("transform", "rotate(180deg)");
 				$('.endgame').html('White has won!');
 
 			}
@@ -199,6 +221,7 @@ var engine = (function () {
 				move(ais[engine.player2].next(engine.field, getMoves()));
 			}
 		}, 1);
+		board.render($.extend(true, {}, field), [], false, taken);
 	}
 
 	function getMoves(fld, player) {
@@ -339,6 +362,45 @@ var engine = (function () {
 						addIfValid(piece, f, i, num - 1, i);
 						addIfValid(piece, f, i, num, i + 1);
 						addIfValid(piece, f, i, num, i - 1);
+
+						// castling
+						var rooks, king;
+						if (engine.turn == "w") {
+							rooks = ["a1", "h1"];
+							king  = "e1";
+						} else if (engine.turn == "b") {
+							rooks = ["a8", "h8"];
+							king  = "e8";
+						}
+						var castleRight = true;
+						var castleLeft = true;
+						for (var n = 0; n < history.length; n++) {
+							var parts = history[n].split(":");
+							if (rooks[1] == parts[0] || rooks[1] == parts[1]) {
+								castleLeft = false;
+								console.log("can not castle left");
+							}
+							if (rooks[0] == parts[0] || rooks[0] == parts[1]) {
+								castleRight = false;
+								console.log("can not castle right");
+							}
+							if (king == parts[0] || king == parts[1]) {
+								castleRight = false;
+								castleLeft = false;
+							}
+						}
+						var rookPos = parseInt(rooks[0].substr(1, 1))-1;
+						
+						if (vCheck === true) {
+							console.log('dfdfd');
+							var newField = pretend($.extend(true, {}, fld), 'e' + (rookPos+1) + ':f' + (rookPos+1));
+							if (isCheck(newField, engine.turn)) castleLeft = false;
+							var newField = pretend($.extend(true, {}, fld), 'e' + (rookPos+1) + ':d' + (rookPos+1));
+							if (isCheck(newField, engine.turn)) castleRight = false;
+						}
+
+						if (castleRight && field.d[rookPos] == "" && field.c[rookPos] == "" && field.b[rookPos] == "") addIfValid(piece, f, i, num - 2, i); // right rook
+						if (castleLeft && field.f[rookPos] == "" && field.g[rookPos] == "") addIfValid(piece, f, i, num + 2, i); // left rook
 					}
 
 				}
