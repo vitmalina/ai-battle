@@ -6,37 +6,45 @@
  */
 
  var ai = {
+
+ 	///// Manditory Info /////
 	name	: 'Andi',
 	author	: 'Vladimir Malinouski',
-	next	: function (field, moves) {
-		var chosen;
 
-		var totalMove = [];
+
+	next	: function (field, moves) {
+		var moveStats = [];
+		var chosen = 0;
 
 		for (var i = 0; i < moves.length; i++) {
 			var fieldInstance = pretendMove(field, moves[i]);
 			var num = getMoves(fieldInstance, "b").length;
-			totalMove.push({
+			moveStats.push({
 				moveNum : num,
 				move    : moves[i]
 			});
 		}
-		//console.log(totalMove);
 
-		var place = 0;
+		
+		chosen = ai.totalPoints(moveStats);
+
+		return chosen;
+	},
+
+
+	totalPoints : function(moves) {
+		var chosen  = 0;
 		var biggest = 0;
 
-		for (var i = 0; i < totalMove.length; i++) {
-			if (totalMove[i].moveNum > biggest) {
-				biggest = totalMove[i].moveNum;
-				place = totalMove[i].move;
+		for (var i = 0; i < moves.length; i++) {
+			if (moves[i].moveNum > biggest) {
+				biggest = moves[i].moveNum;
+				chosen = moves[i].move;
 			}
 		}
 
-
-
-
-
-		return place;
-	}
+		return chosen;
+	},
 }
+
+
