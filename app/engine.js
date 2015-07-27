@@ -190,16 +190,22 @@ var engine = (function () {
 				$('#player1_turn').hide();
 				$('#player2_turn').html('Winner').show();
 				$('.endgame-holder').toggle();
-				$('.endgame').html('Black has won!');
+				if (engine.player1 == null) {
+					$('.endgame').html('Black has won!');
+				} else {
+					$('.endgame').html(ais[engine.player2].name + ' (black) has won!');
+				}
 	
 			} else { // white wins (player 1)
 				$('#player1_turn').html('Winner').show();
 				$('.endgame-holder').toggle();
-				if (engine.player1 != null || engine.player2 != null) $('.endgame-holder').css("transform", "rotate(180deg)");
-				$('.endgame').html('White has won!');
-
+				if (engine.player1 == null && engine.player2 == null) $('.endgame-holder').css("transform", "rotate(180deg)");
+				if (engine.player1 == null) {
+					$('.endgame').html('White has won!');
+				} else {
+					$('.endgame').html(ais[engine.player1].name + ' (white) has won!');
+				}
 			}
-			engine.turn = '';
 			return;
 		}
 		var html = "";
