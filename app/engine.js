@@ -195,7 +195,7 @@ var engine = (function () {
 		}
 		if (moveCount == 0) {
 			// stale mate
-			if (!isCheck(engine.turn == 'w' ? 'b' : 'w')) {
+			if (!isCheck(null, engine.turn)) {
 				$('#player1_turn').html('Draw').show();
 				$('#player2_turn').html('Draw').show();
 				$('.endgame').html('Stale Mate');
