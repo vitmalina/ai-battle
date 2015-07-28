@@ -5,6 +5,7 @@ var engine = (function () {
 	var taken   = [];
 	var history = [];
 	var ais	 	= {
+		randy	: 'randy.js',
 		lucy	: 'lucy.js',
 		andi	: 'andi.js'
 	};
@@ -487,6 +488,37 @@ var engine = (function () {
 		var i2  = parseInt(tmp[1][1]) - 1;
 		fld[f2][i2] = fld[f1][i1];
 		fld[f1][i1] = '';
+		// white pawn promotion
+		if (f1 == 'w' && i2 == 7 && field[f2][i2] == 'wp') {
+			field[f2][i2] = 'wq';
+		}
+		// black pawn promotion
+		if (f1 == 'b' && i2 == 0 && field[f2][i2] == 'bp') {
+			field[f2][i2] = 'bq';
+		}
+		// casteling (white)
+		if (f1 == 'w') {
+			if (mv == 'e1:g1') {
+				field['f'][0] = 'wr';
+				field['h'][0] = '';
+			}
+			if (mv == 'e1:c1') {
+				field['d'][0] = 'wr';
+				field['a'][0] = '';
+			}
+		}
+		// casteling (black)
+		if (f1 == 'b') {
+			if (mv == 'e8:g8') {
+				field['f'][7] = 'br';
+				field['h'][7] = '';
+			}
+			if (mv == 'e8:c8') {
+				field['d'][7] = 'br';
+				field['a'][7] = '';
+			}
+		}
+		// save pretend field
 		if (arguments.length != 2) this.field = fld;
 		return fld;
 	}

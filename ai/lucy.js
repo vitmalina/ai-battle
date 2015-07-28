@@ -1,9 +1,7 @@
 /*
- *  AI for AIBATTLE.net
- *  CodeName: Lucy
- *  Author: Vitali Malinouski
- *
- */
+*  AI for AIBATTLE.net
+*
+*/
 
 var ai = {
 	name	: 'Lucy',
