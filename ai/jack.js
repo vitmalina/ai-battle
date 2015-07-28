@@ -35,7 +35,7 @@
 			}
 		}
 
-		console.log(moves);
+		//console.log(moves);
 
 		return chosen;
 	},

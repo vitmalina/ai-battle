@@ -12,17 +12,25 @@
 	author	: 'Vladimir Malinouski',
 
 
+	color : '',
+
+
 	next	: function (field, moves) {
 		var moveStats = [];
 		var chosen = 0;
 
 		var places = "abcdefgh";
 
+		if (!ai.color) {
+			ai.color = field[moves[0].substr(0,1)][parseInt(moves[0].substr(1,1))].substr(0,1);
+			console.log(ai.color);
+		}
+
 		for (var i = 0; i < moves.length; i++) {
 
 			/////  Available Moves /////
 			var fieldInstance = pretendMove(field, moves[i]);
-			var availMoves = getMoves(fieldInstance, "b").length;
+			var availMoves = getMoves(fieldInstance, ai.color).length;
 
 
 			///// Takeable Piece /////
@@ -45,11 +53,13 @@
 				move   : moves[i],
 				piece  : piece,
 
+				points : 0,
+
 			});
 
 		}
 
-		console.log(moveStats);
+		//console.log(moveStats);
 
 		
 		chosen = ai.totalPoints(moveStats);
