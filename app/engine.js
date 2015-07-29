@@ -51,7 +51,7 @@ var engine = (function () {
 					_register(ai.name.toLowerCase(), ai);
 				})
 				.fail(function () {
-					console.log('ERROR: cannot load '+ ai);
+					console.log('ERROR: cannot load '+ a);
 				});
 		}
 		// this function is here for sand boxing
@@ -303,7 +303,7 @@ var engine = (function () {
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var moves  = [];
 		var extra  = {};
-		var vCheck = (arguments.length > 0 || noVCheck === true ? false : true);
+		var vCheck = (arguments.length == 0 || noVCheck !== true ? true : false);
 		for (var f in fld) {
 			for (var i = 0; i < 8; i++) {
 				var piece = fld[f][i];
