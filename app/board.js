@@ -70,7 +70,6 @@ var board = (function() {
 	} 
 
  	function selectPiece(i, j) {
- 		console.log('selectPiece'); 
 		var i = places[i]; 
 		var moves = engine.getMoves(); 
 		var poss = []; 

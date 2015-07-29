@@ -7,7 +7,7 @@ var engine = (function () {
 	var ais	 	= {
 		randy	: 'randy.js',
 		lucy	: 'lucy.js',
-		andi	: 'andi.js',
+		andi	: 'andi.01.js',
 		jack    : 'jack.js'
 	};
 	var gameOver = false;
@@ -76,15 +76,25 @@ var engine = (function () {
 		$('#player2_name').html('');
 		$('#player1_turn').hide();
 		$('#player2_turn').hide();
+		// field = {
+		// 	a: ["wr", "wp", "", "", "", "", "bp", "br"],
+		// 	b: ["wh", "wp", "", "", "", "", "bp", "bh"],
+		// 	c: ["wb", "wp", "", "", "", "", "bp", "bb"],
+		// 	d: ["wq", "wp", "", "", "", "", "bp", "bq"],
+		// 	e: ["wk", "wp", "", "", "", "", "bp", "bk"],
+		// 	f: ["wb", "wp", "", "", "", "", "bp", "bb"],
+		// 	g: ["wh", "wp", "", "", "", "", "bp", "bh"],
+		// 	h: ["wr", "wp", "", "", "", "", "bp", "br"]
+		// };
 		field = {
 			a: ["wr", "wp", "", "", "", "", "bp", "br"],
 			b: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			c: ["wb", "wp", "", "", "", "", "bp", "bb"],
-			d: ["wq", "wp", "", "", "", "", "bp", "bq"],
+			d: ["wq", "wp", "", "bq", "", "", "bp", "bq"],
 			e: ["wk", "wp", "", "", "", "", "bp", "bk"],
 			f: ["wb", "wp", "", "", "", "", "bp", "bb"],
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
-			h: ["wr", "wp", "", "", "", "", "bp", "br"]
+			h: ["wr", "wp", "", "bb", "", "", "bp", "br"]
 		};
 		history = [];
 		taken 	= [];
@@ -215,8 +225,13 @@ var engine = (function () {
 					if (engine.player1 == null) {
 						$('.endgame').html('Black has won!');
 					} else {
-						$('.endgame').html(ais[engine.player2].name + ' (black) has won!');
-						engine.gameOver = true
+						if (engine.player2 == null) {
+							$('.endgame').html('Human (black) has won!');
+						} else {
+							$('.endgame').html(ais[engine.player2].name + ' (black) has won!');
+						}
+						
+						engine.gameOver = true;
 					}
 		
 				} else { // white wins (player 1)
