@@ -135,9 +135,32 @@ var engine = (function () {
 		$('#player1_move').html('');
 		$('#player2_move').html('');
 		// if ai, make a move
-		if (player1 != null) {
-			move(ais[player1].next($.extend(true, {}, field), getMoves()));
+		if (player1 != null) next(player1);
+	}
+
+	function next(player) {
+		var mv;
+		var all = getMoves();
+		if (player != 'lucy') {
+			mv = ais[player].next($.extend(true, {}, field), all.slice(0));
+		} else {
+			var tmp = all[0].split(':')[0];
+			var me  = field[tmp[0]][parseInt(tmp[1])-1][0];
+			all = getMoves(field, me, true);
+			mv = ais[player].next({
+				me		: me,
+				op		: (me == 'w' ? 'b' : 'w'),
+				field	: $.extend(true, {}, field), 
+				moves	: all.moves,
+				extra	: all.extra
+			});
+			all = all.moves;
+		} 
+		if (all.indexOf(mv) == -1) {
+			alert("ERROR: Invliad move "+ mv +" by "+ ais[player].name);
+			return;
 		}
+		move(mv);
 	}
 
 	function move(action) {
@@ -265,21 +288,22 @@ var engine = (function () {
 		// check if it is ai, then get next move
 		setTimeout(function () {
 			if (engine.turn == 'w' && engine.player1 != null) {
-				move(ais[engine.player1].next($.extend(true, {}, field), getMoves()));
+				next(engine.player1);
 			} else if (engine.turn == 'b' && engine.player2 != null) {
-				move(ais[engine.player2].next($.extend(true, {}, field), getMoves()));
+				next(engine.player2);
 			}
 		}, 1);
 		board.render($.extend(true, {}, field), [], false, taken);
 	}
 
-	function getMoves(fld, player) {
+	function getMoves(fld, color, extended, noVCheck) {
 		if (engine.turn == '') return []; // no game in progress
 		if (fld == null) fld = field;
-		var pl1 = (player ? player : engine.turn);
+		var pl1 = (color ? color : engine.turn);
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var moves  = [];
-		var vCheck = (arguments.length > 0 ? false : true);
+		var extra  = {};
+		var vCheck = (arguments.length > 0 || noVCheck === true ? false : true);
 		for (var f in fld) {
 			for (var i = 0; i < 8; i++) {
 				var piece = fld[f][i];
@@ -452,7 +476,7 @@ var engine = (function () {
 				}
 			}
 		}
-		return moves;
+		return (extended ? { moves: moves, extra: extra }: moves);
 
 		function addIfValid(piece, f, i, f1, i1) {
 			// out of the board
@@ -467,9 +491,13 @@ var engine = (function () {
 			var mv = f+(i+1)+':'+places[f1]+(i1+1)+(beat ? ':' + beat : '');
 			if (vCheck === true) {
 				var newField = pretendMove($.extend(true, {}, fld), mv);
-				if (!isCheck(newField, piece[0])) moves.push(mv);
+				if (!isCheck(newField, piece[0])) {
+					moves.push(mv);
+					extra[mv] = { beats: beat };
+				}
 			} else {
 				moves.push(mv);
+				extra[mv] = { beats: beat };
 			}
 			return beat;
 		}
@@ -483,7 +511,7 @@ var engine = (function () {
 		if (fld == null) fld = field;
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var res = false;
-		var mv  =  getMoves(fld, pl2);
+		var mv  =  getMoves(fld, pl2, false, true);
 		for (var i = 0; i < mv.length; i++) {
 			var tmp = mv[i].split(':');
 			if (tmp.length == 3 && tmp[2] == pl1+'k') res = true;
