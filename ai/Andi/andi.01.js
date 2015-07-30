@@ -18,6 +18,7 @@
 
 
 	next	: function (field, moves) {
+		
 		var moveStats = [];
 		var chosen = 0;
 

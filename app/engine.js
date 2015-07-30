@@ -86,19 +86,9 @@ var engine = (function () {
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]
 		};
-		// field = {
-		// 	a: ["wr", "wp", "", "", "", "", "bp", "br"],
-		// 	b: ["wh", "wp", "", "", "", "", "bp", "bh"],
-		// 	c: ["wb", "wp", "", "", "", "", "bp", "bb"],
-		// 	d: ["wq", "wp", "", "bq", "", "", "bp", "bq"],
-		// 	e: ["wk", "wp", "", "", "", "", "bp", "bk"],
-		// 	f: ["wb", "wp", "", "", "", "", "bp", "bb"],
-		// 	g: ["wh", "wp", "", "", "", "", "bp", "bh"],
-		// 	h: ["wr", "wp", "", "bb", "", "", "bp", "br"]
-		// };
 		history = [];
 		taken 	= [];
-		board.render($.extend(true, {}, field), [], false, taken);
+		board.render($.extend(true, {}, field));
 		board.notation();
 		// start();
 	}
@@ -165,6 +155,7 @@ var engine = (function () {
 
 	function move(action) {
 		if (engine.turn == '') return; // no game in progress
+		board.refresh($.extend(true, {}, field), action);
 		history.push(action);
 		if (history.length >= 300) {
 			engine.turn = '';
@@ -269,7 +260,6 @@ var engine = (function () {
 				}
 			}
 			$('.endgame-holder').show();
-			board.render($.extend(true, {}, field), [], false, taken);
 			return;
 		}
 		var html = "";
@@ -293,7 +283,6 @@ var engine = (function () {
 				next(engine.player2);
 			}
 		}, 1);
-		board.render($.extend(true, {}, field), [], false, taken);
 	}
 
 	function getMoves(fld, color, extended, noVCheck) {
