@@ -155,6 +155,7 @@ var engine = (function () {
 
 	function move(action) {
 		if (engine.turn == '') return; // no game in progress
+		console.log(action);
 		board.refresh($.extend(true, {}, field), action);
 		history.push(action);
 		if (history.length >= 300) {
@@ -293,6 +294,7 @@ var engine = (function () {
 		var moves  = [];
 		var extra  = {};
 		var vCheck = (arguments.length == 0 || noVCheck !== true ? true : false);
+		vcheck = true;
 		for (var f in fld) {
 			for (var i = 0; i < 8; i++) {
 				var piece = fld[f][i];

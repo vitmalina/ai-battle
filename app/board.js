@@ -56,16 +56,39 @@ var board = (function() {
 		var tmp = this.id.split("-");
 		var i = tmp[0];
 		var j = tmp[1];
+		j = parseInt(j);
+		var moves = engine.getMoves();
 		$("#" + i + "-" + j).each(function() {
-		    if ($(this).find('img').length) {
-		    	if (!selected) {
+			$("div.poss").remove();
+			if ($(this).hasClass("possibleMove")) {
+				$("#board div").removeClass("selected");
+				var tmp = selected[1]+(parseInt(selected[3])+1)+":"+ $(this).closest("div").attr("id")[0]+(parseInt($(this).closest("div").attr("id")[2])+1);
+				console.log("tmp " + tmp);
+				engine.move(tmp);
+				$("#board div").removeClass("possibleMove");
+			} else if ($(this).find('img').length && moves.length && $(this).find('img').attr("src").substr(4,1) == engine.turn) {
+				$("#board div").removeClass("possibleMove");
+				if (selected == null) {
 					selected = "#" + i + "-" + j;
 				} else {
 					$(selected).removeClass( "selected" );
 					selected = "#" + i + "-" + j;
 				}
 				$(selected).addClass( "selected" );
-		    }
+				for (var n = 0; n < moves.length; n++) {
+					var temp = moves[n].split(":");
+					var id = temp[1].substr(0,1)+"-"+(parseInt(temp[1].substr(1,1))-1);
+					if (temp[0].substr(0,1)+(parseInt(temp[0].substr(1,1))-1) == (i+j)) {
+						$("#"+id).append("<div class='poss'></div>");
+						$("#"+id).addClass("possibleMove");
+					}
+				}
+			} else {
+				$("#board div").removeClass("possibleMove");
+				selected = null;
+		    	$("#board div").removeClass("selected");
+			}
+			
 		});
 	}
 

@@ -6,6 +6,13 @@ img {
 	position: absolute;
 }
 
+.moveto {
+	-webkit-box-shadow: inset 0px 0px 300px 100px rgba(248,240,22,1);
+}
+.selected {
+	-webkit-box-shadow: inset 0px 0px 300px 100px rgba(0,0,255,1);
+}
+
 #game_holder {
 	transition: transform 0.75s;
 	display: inline-block;
