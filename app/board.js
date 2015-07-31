@@ -19,7 +19,6 @@ var board = (function() {
 	}
 
 	function render(fld) {
-		console.log(fld);
 		var html = "";
 		for (var i = 0; i < 8; i++) {
 			for (var j = 0; j < 8; j++) {
@@ -63,7 +62,6 @@ var board = (function() {
 			if ($(this).hasClass("possibleMove")) {
 				$("#board div").removeClass("selected");
 				var tmp = selected[1]+(parseInt(selected[3])+1)+":"+ $(this).closest("div").attr("id")[0]+(parseInt($(this).closest("div").attr("id")[2])+1);
-				console.log("tmp " + tmp);
 				engine.move(tmp);
 				$("#board div").removeClass("possibleMove");
 			} else if ($(this).find('img').length && moves.length && $(this).find('img').attr("src").substr(4,1) == engine.turn) {

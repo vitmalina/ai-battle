@@ -155,7 +155,7 @@ var engine = (function () {
 
 	function move(action) {
 		if (engine.turn == '') return; // no game in progress
-		console.log(action);
+		//console.log(action);
 		board.refresh($.extend(true, {}, field), action);
 		history.push(action);
 		if (history.length >= 300) {
