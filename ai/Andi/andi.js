@@ -3,7 +3,9 @@ var ai = {
     author: "Vladimir Malinouski",
     color: "",
     lastMoves: [],
-    next: function(a, b) {
+    next: function(game) {
+        var a = game.field;
+        var v = game.moves;
         var c = [],
             d = 0;
         ai.color || (ai.color = a[b[0].substr(0, 1)][parseInt(b[0].substr(1, 1)) - 1].substr(0, 1), ai.op = "w" == ai.color ? "b" : "w", console.log(ai.color));

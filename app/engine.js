@@ -86,6 +86,16 @@ var engine = (function () {
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]
 		};
+		// field = {
+		// 	a: ["wr", "wp", "", "", "", "bp", "", "br"],
+		// 	b: ["", "wp", "", "", "wh", "", "bp", "bh"],
+		// 	c: ["wb", "wp", "", "", "", "", "bp", "bb"],
+		// 	d: ["wq", "wp", "", "", "", "", "bp", "bq"],
+		// 	e: ["wk", "", "", "wp", "bp", "", "", "bk"],
+		// 	f: ["wb", "wp", "", "", "", "", "bp", "bb"],
+		// 	g: ["wh", "wp", "", "", "", "", "bp", "bh"],
+		// 	h: ["wr", "wp", "", "", "", "", "bp", "br"]
+		// };
 		history = [];
 		taken 	= [];
 		board.render($.extend(true, {}, field));
@@ -129,24 +139,14 @@ var engine = (function () {
 	}
 
 	function next(player) {
-		var mv;
-		var all = getMoves();
-		if (player != 'lucy') {
-			mv = ais[player].next($.extend(true, {}, field), all.slice(0));
-		} else {
-			var tmp = all[0].split(':')[0];
-			var me  = field[tmp[0]][parseInt(tmp[1])-1][0];
-			all = getMoves(field, me, true);
-			mv = ais[player].next({
-				me		: me,
-				op		: (me == 'w' ? 'b' : 'w'),
-				field	: $.extend(true, {}, field), 
-				moves	: all.moves,
-				extra	: all.extra
-			});
-			all = all.moves;
-		} 
-		if (all.indexOf(mv) == -1) {
+		var moves = getMoves(field, engine.turn);
+		var mv = ais[player].next({
+			me		: engine.turn,
+			op		: (engine.turn == 'w' ? 'b' : 'w'),
+			field	: $.extend(true, {}, field), 
+			moves	: moves.slice(0)
+		});
+		if (moves.indexOf(mv) == -1) {
 			alert("ERROR: Invliad move "+ mv +" by "+ ais[player].name);
 			return;
 		}
@@ -155,7 +155,6 @@ var engine = (function () {
 
 	function move(action) {
 		if (engine.turn == '') return; // no game in progress
-		//console.log(action);
 		board.refresh($.extend(true, {}, field), action);
 		history.push(action);
 		if (history.length >= 300) {
@@ -286,13 +285,12 @@ var engine = (function () {
 		}, 1);
 	}
 
-	function getMoves(fld, color, extended, noVCheck) {
+	function getMoves(fld, color, noVCheck) {
 		if (engine.turn == '') return []; // no game in progress
 		if (fld == null) fld = field;
 		var pl1 = (color ? color : engine.turn);
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var moves  = [];
-		var extra  = {};
 		var vCheck = (arguments.length == 0 || noVCheck !== true ? true : false);
 		vcheck = true;
 		for (var f in fld) {
@@ -467,7 +465,7 @@ var engine = (function () {
 				}
 			}
 		}
-		return (extended ? { moves: moves, extra: extra }: moves);
+		return moves;
 
 		function addIfValid(piece, f, i, f1, i1) {
 			// out of the board
@@ -484,11 +482,9 @@ var engine = (function () {
 				var newField = pretendMove($.extend(true, {}, fld), mv);
 				if (!isCheck(newField, piece[0])) {
 					moves.push(mv);
-					extra[mv] = { beats: beat };
 				}
 			} else {
 				moves.push(mv);
-				extra[mv] = { beats: beat };
 			}
 			return beat;
 		}
@@ -502,7 +498,7 @@ var engine = (function () {
 		if (fld == null) fld = field;
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var res = false;
-		var mv  =  getMoves(fld, pl2, false, true);
+		var mv  =  getMoves(fld, pl2, true);
 		for (var i = 0; i < mv.length; i++) {
 			var tmp = mv[i].split(':');
 			if (tmp.length == 3 && tmp[2] == pl1+'k') res = true;

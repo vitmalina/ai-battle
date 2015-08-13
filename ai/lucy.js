@@ -6,20 +6,20 @@
 var ai = {
 	name	: 'Lucy',
 	author	: 'Vitali Malinouski',
-	next	: function (field, moves) {
-		var tmp = moves[0].split(':')[0];
-		var my  = field[tmp[0]][parseInt(tmp[1])-1][0]; // my color
-		var op  = (my == 'w' ? 'b' : 'w');			    // oponent color
+	next	: function (game) {
+		console.log(game);
+		// console.time('move');
 		// get random move
-		var index = Math.floor(Math.random() * moves.length);
-		// score moves
-		for (var i = 0; i < moves.length; i++) {
-			var move = moves[i].split(':');
+		var index = Math.floor(Math.random() * game.moves.length);
+		// Kill if it can
+		for (var i = 0; i < game.moves.length; i++) {
+			var move = game.moves[i].split(':');
 			if (move.length == 3) {
 				index = i;
 				break;
 			}
 		}
-		return moves[index];
+		// console.timeEnd('move');
+		return game.moves[index];
 	}
 }

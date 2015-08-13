@@ -11,7 +11,10 @@
 	name	: 'Jack',
 	author	: 'Kirill Shpin',
 	
-	next	: function (field, moves) {
+	next	: function (game) {
+		var field = game.field;
+		var moves = game.moves;
+
 		if (!ai.me) {
 			ai.me = field[moves[0][0]][parseInt(moves[0][1])][0];
 			ai.enemy = ai.me == "w" ? "b" : "w";
