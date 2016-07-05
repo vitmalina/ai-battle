@@ -7,7 +7,7 @@ var engine = (function () {
 	var ais	 	= {
 		randy	: 'randy.js',
 		lucy	: 'lucy.js',
-		andi	: 'Andi/andi.js',
+		andi	: 'Andi/andi.03.js',
 		jack    : 'jack.js'
 	};
 	var gameOver = false;
@@ -40,8 +40,7 @@ var engine = (function () {
 		for (var a in ais) {
 			$.ajax({
 					url   : 'ai/'+ ais[a],
-					async : false,
-					method: 'get',
+					async : false
 				})
 				.done(function (text, status, xhr) {
 					var engine, field, places, taken, history, ais;
@@ -79,28 +78,17 @@ var engine = (function () {
 		$('#player2_turn').hide();
 		field = {
 			a: ["wr", "wp", "", "", "", "", "bp", "br"],
-			b: ["wh", "wp", "", "", "", "", "bp", "bh"],
-			c: ["wb", "wp", "", "", "", "", "bp", "bb"],
-			d: ["wq", "wp", "", "", "", "", "bp", "bq"],
+			b: ["", "wp", "", "bh", "", "", "bp", "bh"],
+			c: ["", "", "", "", "", "", "bp", "bb"],
+			d: ["", "wp", "", "", "", "", "bp", "bq"],
 			e: ["wk", "wp", "", "", "", "", "bp", "bk"],
 			f: ["wb", "wp", "", "", "", "", "bp", "bb"],
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]
 		};
-		// tests
-		// field = {
-		// 	a: ["wr", "wp", "", "", "", "bp", "", "br"],
-		// 	b: ["", "wp", "", "", "wh", "", "bp", "bh"],
-		// 	c: ["wb", "wp", "", "", "", "", "bp", "bb"],
-		// 	d: ["wq", "wp", "", "", "", "", "bp", "bq"],
-		// 	e: ["wk", "", "", "wp", "bp", "", "", "bk"],
-		// 	f: ["wb", "wp", "", "", "", "", "bp", "bb"],
-		// 	g: ["wh", "wp", "", "", "", "", "bp", "bh"],
-		// 	h: ["wr", "wp", "", "", "", "", "bp", "br"]
-		// };
 		history = [];
 		taken 	= [];
-		board.render(cloneField(field));
+		board.render($.extend(true, {}, field));
 		board.notation();
 		// start();
 	}
@@ -141,14 +129,24 @@ var engine = (function () {
 	}
 
 	function next(player) {
-		var moves = getMoves(field, engine.turn);
-		var mv = ais[player].next({
-			me		: engine.turn,
-			op		: (engine.turn == 'w' ? 'b' : 'w'),
-			field	: cloneField(field), 
-			moves	: moves.slice(0)
-		});
-		if (moves.indexOf(mv) == -1) {
+		var mv;
+		var all = getMoves();
+		if (player != 'lucy') {
+			mv = ais[player].next($.extend(true, {}, field), all.slice(0));
+		} else {
+			var tmp = all[0].split(':')[0];
+			var me  = field[tmp[0]][parseInt(tmp[1])-1][0];
+			all = getMoves(field, me, true);
+			mv = ais[player].next({
+				me		: me,
+				op		: (me == 'w' ? 'b' : 'w'),
+				field	: $.extend(true, {}, field), 
+				moves	: all.moves,
+				extra	: all.extra
+			});
+			all = all.moves;
+		} 
+		if (all.indexOf(mv) == -1) {
 			alert("ERROR: Invliad move "+ mv +" by "+ ais[player].name);
 			return;
 		}
@@ -157,7 +155,8 @@ var engine = (function () {
 
 	function move(action) {
 		if (engine.turn == '') return; // no game in progress
-		board.refresh(cloneField(field), action);
+		//console.log(action);
+		board.refresh($.extend(true, {}, field), action);
 		history.push(action);
 		if (history.length >= 300) {
 			engine.turn = '';
@@ -191,12 +190,10 @@ var engine = (function () {
 			if (action == 'e1:g1') {
 				field['f'][0] = 'wr';
 				field['h'][0] = '';
-				board.refresh(field, "h1:f1");
 			}
 			if (action == 'e1:c1') {
 				field['d'][0] = 'wr';
 				field['a'][0] = '';
-				board.refresh(field, "a1:d1");
 			}
 		}
 		// casteling (black)
@@ -204,12 +201,10 @@ var engine = (function () {
 			if (action == 'e8:g8') {
 				field['f'][7] = 'br';
 				field['h'][7] = '';
-				board.refresh(field, "h8:f8");
 			}
 			if (action == 'e8:c8') {
 				field['d'][7] = 'br';
 				field['a'][7] = '';
-				board.refresh(field, "a8:d8");
 			}
 		}
 		engine.turn = (engine.turn == 'w' ? 'b' : 'w');
@@ -221,7 +216,6 @@ var engine = (function () {
 			$("#player2_move").html("");
 			if (engine.player1 == null && engine.player2 == null) {
 				$("#game_holder, .player1, .player2").css("transform", "rotate(0deg)");
-				$("img").removeClass("rotate");
 			}
 		} else {
 			$('#player1_turn').hide();
@@ -230,7 +224,6 @@ var engine = (function () {
 			$("#player1_move").html("");
 			if (engine.player1 == null && engine.player2 == null) {
 				$("#game_holder, .player1, .player2").css("transform", "rotate(180deg)");
-				$("img").addClass("rotate");
 			}
 		}
 		if (moveCount == 0) {
@@ -293,12 +286,13 @@ var engine = (function () {
 		}, 1);
 	}
 
-	function getMoves(fld, color, noVCheck) {
+	function getMoves(fld, color, extended, noVCheck) {
 		if (engine.turn == '') return []; // no game in progress
 		if (fld == null) fld = field;
 		var pl1 = (color ? color : engine.turn);
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var moves  = [];
+		var extra  = {};
 		var vCheck = (arguments.length == 0 || noVCheck !== true ? true : false);
 		vcheck = true;
 		for (var f in fld) {
@@ -444,7 +438,6 @@ var engine = (function () {
 						}
 						var castleRight = true;
 						var castleLeft = true;
-						// check if king or rook was moved before
 						for (var n = 0; n < history.length; n++) {
 							var parts = history[n].split(":");
 							if (rooks[1] == parts[0] || rooks[1] == parts[1]) {
@@ -461,9 +454,9 @@ var engine = (function () {
 						var rookPos = parseInt(rooks[0].substr(1, 1))-1;
 						
 						if (vCheck === true) {
-							var newField = pretendMove(cloneField(fld), 'e' + (rookPos+1) + ':f' + (rookPos+1));
+							var newField = pretendMove($.extend(true, {}, fld), 'e' + (rookPos+1) + ':f' + (rookPos+1));
 							if (isCheck(newField, engine.turn)) castleLeft = false;
-							var newField = pretendMove(cloneField(fld), 'e' + (rookPos+1) + ':d' + (rookPos+1));
+							var newField = pretendMove($.extend(true, {}, fld), 'e' + (rookPos+1) + ':d' + (rookPos+1));
 							if (isCheck(newField, engine.turn)) castleRight = false;
 						}
 
@@ -474,7 +467,7 @@ var engine = (function () {
 				}
 			}
 		}
-		return moves;
+		return (extended ? { moves: moves, extra: extra }: moves);
 
 		function addIfValid(piece, f, i, f1, i1) {
 			// out of the board
@@ -488,12 +481,14 @@ var engine = (function () {
 			}
 			var mv = f+(i+1)+':'+places[f1]+(i1+1)+(beat ? ':' + beat : '');
 			if (vCheck === true) {
-				var newField = pretendMove(cloneField(fld), mv);
+				var newField = pretendMove($.extend(true, {}, fld), mv);
 				if (!isCheck(newField, piece[0])) {
 					moves.push(mv);
+					extra[mv] = { beats: beat };
 				}
 			} else {
 				moves.push(mv);
+				extra[mv] = { beats: beat };
 			}
 			return beat;
 		}
@@ -507,7 +502,7 @@ var engine = (function () {
 		if (fld == null) fld = field;
 		var pl2 = (pl1 == 'w' ? 'b' : 'w');
 		var res = false;
-		var mv  =  getMoves(fld, pl2, true);
+		var mv  =  getMoves(fld, pl2, false, true);
 		for (var i = 0; i < mv.length; i++) {
 			var tmp = mv[i].split(':');
 			if (tmp.length == 3 && tmp[2] == pl1+'k') res = true;
@@ -520,7 +515,7 @@ var engine = (function () {
 			mv  = fld;
 			fld = null;
 		}
-		if (fld == null) fld = cloneField(field);
+		if (fld == null) fld = $.extend(true, {}, field);
 		var tmp = mv.split(':');
 		var f1  = tmp[0][0];
 		var i1  = parseInt(tmp[0][1]) - 1;
@@ -603,7 +598,7 @@ var engine = (function () {
 				pretendMove(initField, (parts[0] + ":" + parts[1]));
 				historyLoc++;
 			}
-			board.render(cloneField(initField), [], false, taken);
+			board.render($.extend(true, {}, initField), [], false, taken);
 			var html = "";
 			for (var i = 0; i < history.length; i++) {
 				var color = "";
@@ -623,20 +618,5 @@ var engine = (function () {
 			$("#history").html(html);
 		}
 	}
-
-	function cloneField(field) {
-		var newField = {};
-		for (var file in field) {
-
-			var row = field[file];
-			var r = [];
-			for (var i = 0; i < 8; i++) {
-				r[i] = row[i];
-			}
-				newField[file] = r;
-		}
-	return newField;
-
-}
 
 }());

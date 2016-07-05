@@ -15,6 +15,7 @@
 	color     : '',
 	op        : '',
 	lastMoves : [],
+	field     : [],
 
 
 	next	: function (field, moves) {
@@ -23,6 +24,8 @@
 		var chosen = 0;
 
 		var places = "abcdefgh";
+
+		ai.field = field;
 
 		if (!ai.color) {
 			ai.color = field[moves[0].substr(0,1)][parseInt(moves[0].substr(1,1))-1].substr(0,1);
@@ -54,12 +57,12 @@
 			}
 
 			///// Piece /////
-			var tmp = parseInt(moves[i].substr(1,1));
-			tmp = tmp -1;
-			var piece = field[moves[i].substr(0,1)][tmp].substr(1,1);
+			var piece = ai.piece(moves[i].split(":")[0]);
 			//console.log(piece);
 
 			///// Piece Threat /////
+			var protWorth = 0;
+			var protectable = false;
 			var eThreat = false;
 			var eThreatMoves = getMoves($.extend(true, {}, field), ai.op);
 			for (var j = 0; j < eThreatMoves.length; j++) {
@@ -80,13 +83,32 @@
 
 			///// Check Mate ///// 	
 			var chkMate = false;	
-			var checkmateMoves = getMoves(pretendMove($.extend(true, {}, field), moves[i]), ai.op).length;
-			if (checkmateMoves == 0 && isCheck(checkmateMoves, ai.op)) {
+			var checkmateMoves = getMoves(fieldInstance, ai.op).length;
+			if (checkmateMoves == 0 && isCheck(fieldInstance, ai.op)) {
 				chkMate = true;
 				console.log("Found a Check Mate move: " + moves[i]);
 				//ai.showPretend(pretendMove($.extend(true, {}, field), moves[i]));
+			} 
+
+			///// Stale Mate Prevention ///
+			var stlMate = false;
+			if (checkmateMoves == 0 && !isCheck(fieldInstance, ai.op)) {
+				stlMate = true;
 			}
 
+			///// Avoid Being Check Mated /////
+			var chkMated = false;
+			var checkmatedMoves = getMoves($.extend(true, {}, fieldInstance), ai.op);
+			for (var j = 0; j < checkmatedMoves.length; j++) {
+				var fieldInstance2 = pretendMove($.extend(true, {}, fieldInstance), checkmatedMoves[j]);
+				var myMoves = getMoves($.extend(true, {}, fieldInstance2), ai.color).length;
+				if (myMoves == 0 && isCheck(fieldInstance2, ai.color)) {
+					chkMated = true;
+				}
+			}
+
+			///// Fork Move /////
+			var frkMv = false;
 
 
 
@@ -99,10 +121,17 @@
 				},
 
 				move     : moves[i],
-				piece    : piece,
-				eThreat  : eThreat, // existing threat
+				piece    : piece, // the piece that is being moved, used for getting point values
+				eThreat  : { // existing threat
+					threat 		: eThreat,
+					protectable : protectable,
+					protWorth   : protWorth,
+				}, 
 				mThreat  : mThreat, // threat if moved
 				chkMate  : chkMate, // if checkmate
+				stlMate  : stlMate, // will cause stale mate
+				chkMated : chkMated, // if move will get you checkmated
+				frkMv    : frkMv, // if the move will fork two pieces
 
 				points : 0,
 
@@ -112,7 +141,6 @@
 
 		
 		chosen = ai.totalPoints(moveStats);
-
 
 		//console.log(chosen);
 		//console.log(moveStats);
@@ -125,7 +153,7 @@
 
 	totalPoints : function(moves) {
 		var chosen  = moves[0].move;
-		var biggest = -10000;
+		var biggest = -100000;
 		var p = {
 			p : 3,
 			h : 8,
@@ -154,16 +182,21 @@
 			if (moves[i].availMoves > ai.lastMoves.length && moves[i].piece != "k") {
 				moves[i].points += (moves[i].availMoves/50);
 			}
-			if (moves[i].eThreat) {
+			if (moves[i].eThreat.threat) {
 				moves[i].points += p[moves[i].piece];
 			}
 			if (moves[i].mThreat) {
-				moves[i].points -= p[moves[i].piece]*1.5;
+				moves[i].points -= p[moves[i].piece];
 			}
 			if (moves[i].chkMate) {
 				moves[i].points += 100000;
 			}
-			
+			if (moves[i].stlMate) {
+				moves[i].points -= 1000;
+			}
+			if (moves[i].chkMated) {
+				moves[i].points -= 10000;
+			}
 		}
 		for (var i = 0; i < moves.length; i++) {
 			if (moves[i].points >= biggest) {
@@ -185,5 +218,9 @@
 		}
 		console.log('   a  b  c  d  e  f  g  h');
 		console.log('-------------------------');
+	},
+
+	piece : function(location) {
+		return ai.field[location[0]][(parseInt(location[1])-1)].substr(1,1)
 	}
 }
