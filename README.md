@@ -9,5 +9,10 @@ You can download and run your own server. It uses NodeJS and MySQL that needs to
 ```
 git clone https://github.com/vitmalina/ai-battle
 npm install
+```
+
+Edit api/_conf.js file and enter your data base connection information. Then open setup/db.sql and run it agains your MySQL database. You can optionally run data.sql for sample user data.
+
+```
 npm start
 ```
