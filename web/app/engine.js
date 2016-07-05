@@ -297,6 +297,7 @@ var engine = (function () {
 			}
 		}
 		$("#history").html(html);
+		$(".history-holder").scrollTop(10000);
 		// check if it is ai, then get next move
 		setTimeout(function () {
 			if (engine.turn == 'w' && engine.player1 != null) {
@@ -635,7 +636,6 @@ var engine = (function () {
 				}
 			}
 			$("#history").html(html);
-			
 		}
 	}
 
