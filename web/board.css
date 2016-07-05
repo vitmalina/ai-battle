@@ -9,7 +9,7 @@
 }
 
 body {
-	overflow: hidden;
+	overflow: scroll;
 	font-family: 'sans';
 }
 
@@ -31,6 +31,9 @@ img {
 #game_holder {
 	transition: transform 0.75s;
 	display: inline-block;
+	position: absolute;
+	left: 50%;
+	margin-left: -267px;
 }
 
 .board-holder {
@@ -80,7 +83,7 @@ img {
 	margin-top: 2px;
 	margin-right: 10px;
 	color: white;
-	font-size: 14px;
+	font-size: 11px;
 	padding: 3px 10px 0px 10px;
 }
 .poss {
@@ -149,7 +152,7 @@ img {
 
 .start-menu {
 	height: 310px;
-	width: 260px;
+	width: 300px;
 	border-radius: 5px;
 	background-color: white;
 	position: absolute;
@@ -197,88 +200,23 @@ img {
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
 	border-top: 0px;
 }
-input[type=range].start-game-range {
-  -webkit-appearance: none;
-  width: 100%;
-  margin: 4.1px 0;
+
+#ex1Slider .slider-selection {
+	background: #BABABA;
 }
-input[type=range].start-game-range:focus {
-  outline: none;
+
+.abs-center {
+	position: absolute;
+	left: 50%;
 }
-input[type=range].start-game-range::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 3.8px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7), 0px 0px 1px rgba(13, 13, 13, 0.7);
-  background: rgba(0, 0, 0, 0.16);
-  border-radius: 25px;
-  border: 0px solid #010101;
+
+.history-holder {
+	width: 200px;
+	position: absolute;
+	right: -210px;
+	height: 522px;
+	overflow-y: hidden;
+	overflow: scroll;
 }
-input[type=range].start-game-range::-webkit-slider-thumb {
-  box-shadow: 0px 0px 3.8px #000000, 0px 0px 0px #0d0d0d;
-  border: 0px solid #000000;
-  height: 12px;
-  width: 12px;
-  border-radius: 48px;
-  background: #ffffff;
-  cursor: pointer;
-  -webkit-appearance: none;
-  margin-top: -4.1px;
-}
-input[type=range].start-game-range:focus::-webkit-slider-runnable-track {
-  background: rgba(51, 51, 51, 0.16);
-}
-input[type=range].start-game-range::-moz-range-track {
-  width: 100%;
-  height: 3.8px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7), 0px 0px 1px rgba(13, 13, 13, 0.7);
-  background: rgba(0, 0, 0, 0.16);
-  border-radius: 25px;
-  border: 0px solid #010101;
-}
-input[type=range].start-game-range::-moz-range-thumb {
-  box-shadow: 0px 0px 3.8px #000000, 0px 0px 0px #0d0d0d;
-  border: 0px solid #000000;
-  height: 12px;
-  width: 12px;
-  border-radius: 48px;
-  background: #ffffff;
-  cursor: pointer;
-}
-input[type=range].start-game-range::-ms-track {
-  width: 100%;
-  height: 3.8px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  color: transparent;
-}
-input[type=range].start-game-range::-ms-fill-lower {
-  background: rgba(0, 0, 0, 0.16);
-  border: 0px solid #010101;
-  border-radius: 50px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7), 0px 0px 1px rgba(13, 13, 13, 0.7);
-}
-input[type=range].start-game-range::-ms-fill-upper {
-  background: rgba(0, 0, 0, 0.16);
-  border: 0px solid #010101;
-  border-radius: 50px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7), 0px 0px 1px rgba(13, 13, 13, 0.7);
-}
-input[type=range].start-game-range::-ms-thumb {
-  box-shadow: 0px 0px 3.8px #000000, 0px 0px 0px #0d0d0d;
-  border: 0px solid #000000;
-  height: 12px;
-  width: 12px;
-  border-radius: 48px;
-  background: #ffffff;
-  cursor: pointer;
-  height: 3.8px;
-}
-input[type=range].start-game-range:focus::-ms-fill-lower {
-  background: rgba(0, 0, 0, 0.16);
-}
-input[type=range].start-game-range:focus::-ms-fill-upper {
-  background: rgba(51, 51, 51, 0.16);
-}
+
+

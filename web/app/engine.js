@@ -285,14 +285,15 @@ var engine = (function () {
 		}
 		var html = "";
 		for (var i = 0; i < history.length; i++) {
+			
 			if (i/2 == Math.floor(i/2)) {
-				html +=   "<div class='block' style='width: 75px; height: 20px; left: 0px; top: " + (Math.floor(i/2)*25) + "px; border-right: 1px solid black; text-align: center; border-bottom: 1px solid gray' onclick='engine.historyPoint(" + i + ")'>"
-						+ history[i]
-						+ "</div>";
+				html += `<tr><td>
+							${history[i]}
+						</td>`;
 			} else {
-				html +=   "<div class='block' style='width: 73px; height: 20px; right: 0px; top: " + (Math.floor(i/2)*25) + "px; text-align: center; border-bottom: 1px solid gray' onclick='engine.historyPoint(" + i + ")'>"
-						+ history[i]
-						+ "</div>";
+				html += `<td>
+							${history[i]}
+						</td></tr>`;
 			}
 		}
 		$("#history").html(html);
@@ -634,6 +635,7 @@ var engine = (function () {
 				}
 			}
 			$("#history").html(html);
+			
 		}
 	}
 
