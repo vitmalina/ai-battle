@@ -7,7 +7,7 @@ var ai = {
 	name	: 'Lucy',
 	author	: 'Vitali Malinouski',
 	next	: function (game) {
-		console.log(game);
+		//console.log(game);
 		// console.time('move');
 		// get random move
 		var index = Math.floor(Math.random() * game.moves.length);

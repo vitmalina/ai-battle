@@ -7,7 +7,7 @@ var engine = (function () {
 	var ais	 	= {
 		randy	: 'randy.js',
 		lucy	: 'lucy.js',
-		andi	: 'Andi/andi.js',
+		andi	: 'Andi/andi.02.js',
 		jack    : 'jack.js'
 	};
 	var gameOver = false;

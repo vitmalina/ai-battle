@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Chess</title>
+
+	<link rel="shortcut icon" type="image/png" href="img/bh.png"/>
+
+	<title>Ai-Battle.net</title>
+
+	<script type="text/javascript" src="libs/jquery-1.11.2.js"></script>
+
+	<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 
 	<script type="text/javascript" src="app/board.js"></script>
-	<script type="text/javascript" src="libs/jquery-1.11.2.js"></script>
 	<script type="text/javascript" src="app/engine.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="board.css">
@@ -27,33 +34,36 @@
 			<div id="board" class="board">
 			</div>
 			<div class="popup-holder" style="">
-					<div class="start-menu">
-						<table>
-							<tr>
-								<td>White</td>
-								<td>
-									<select id="player_one_options">
-										<option>
-											Human
-										</option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>Black</td>
-								<td>
-									<select id="player_two_options">
-										<option>
-											Human
-										</option>
-									</select>
-								</td>
-							</tr>
-						</table>
-						<div class="button" onclick="gameStart()">
-							Start Game
-						</div>
+
+				<div class="start-menu">
+					<table>
+						<tr>
+							<td>White</td>
+							<td>
+								<select id="player_one_options">
+									<option>
+										Human
+									</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>Black</td>
+							<td>
+								<select id="player_two_options">
+									<option>
+										Human
+									</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+					<div class="btn btn-primary" onclick="gameStart()">
+						Start Game
 					</div>
+				</div>
+
+
 			</div>
 			<div class="endgame-holder" onclick="$(this).hide()">
 				<div class="endgame">

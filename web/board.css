@@ -6,6 +6,10 @@ img {
 	position: absolute;
 }
 
+.block {
+	position: absolute;
+}
+
 .moveto {
 	-webkit-box-shadow: inset 0px 0px 300px 100px rgba(248,240,22,1);
 }
@@ -40,10 +44,6 @@ img {
 	position: absolute;
 	height: 64px; 
 	width: 64px;
-}
-
-.block {
-	position: absolute;
 }
 
 .notation {
@@ -194,5 +194,9 @@ img {
 	margin-top: -50px;
 	padding-top: 20px;
 	text-align: center;
+}
+
+.rotate {
+	transform: rotate(180deg);
 }
 
