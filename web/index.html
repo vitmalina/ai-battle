@@ -8,6 +8,9 @@
 
 	<script type="text/javascript" src="libs/jquery-1.11.2.js"></script>
 
+	<link href="libs/w2ui/w2ui.css" rel="stylesheet">
+	<script src="libs/w2ui/w2ui.js"></script>
+
 	<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 
@@ -22,72 +25,86 @@
 		}
 	</script>
 </head>
-<body>
-	<div id="game_holder">
-		<div class="player2">
-			<span id="player2_name">Player 2</span>
-			<span id="player2_turn" class="turn" style="display: none">Your Turn</span>
-			<span id="player2_move" class="player_move"> </span>
-		</div>
-
-		<div class="board-holder">
-			<div id="board" class="board">
+<body class="fluid-row">
+	<div class="col-md-12">
+		<div id="game_holder">
+			<div class="player2">
+				<span id="player2_name">Player 2</span>
+				<span id="player2_turn" class="turn" style="display: none">Your Turn</span>
+				<span id="player2_move" class="player_move"> </span>
 			</div>
-			<div class="popup-holder" style="">
 
-				<div class="start-menu">
-					<table>
-						<tr>
-							<td>White</td>
-							<td>
-								<select id="player_one_options">
-									<option>
-										Human
-									</option>
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>Black</td>
-							<td>
-								<select id="player_two_options">
-									<option>
-										Human
-									</option>
-								</select>
-							</td>
-						</tr>
-					</table>
-					<div class="btn btn-primary" onclick="gameStart()">
-						Start Game
+			<div class="board-holder">
+				<div id="board" class="board">
+				</div>
+				<div class="popup-holder" style="">
+					<div class="start-menu">
+
+						<div class="fluid-row">
+							<div class="col-md-12">
+								<table class="table">
+									<tr>
+										<td>White </td>
+										<td>
+											<select id="player_one_options">
+												<option>
+													Human
+												</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+									  <td>Black </td>
+										<td>
+											<select id="player_two_options">
+												<option>
+													Human
+												</option>
+											</select>
+										</td>
+									</tr>
+									<tr>
+									  <td>Games</td>
+									  <td>
+									  	<div id="slider">
+										  <input class="start-game-range" type="range" style="padding-top: 5px" min="1" max="100" value="1" step="1" autocomplete="on"></input>
+									  </td>
+									</tr>
+								</table>
+							</div>
+							<div class="col-md-12 start-game-btn">
+								<div class="btn btn-primary center-block" onclick="gameStart()">
+									Start Game
+								</div>
+							</div>
+						</div>
+
 					</div>
 				</div>
-
-
-			</div>
-			<div class="endgame-holder" onclick="$(this).hide()">
-				<div class="endgame">
-					White has won
+				<div class="endgame-holder" onclick="$(this).hide()">
+					<div class="endgame">
+						White has won
+					</div>
 				</div>
 			</div>
+
+			<div class="player1">
+				<span id="player1_name">Player 1</span>
+				<span id="player1_turn" class="turn">Your Turn</span>
+				<span id="player1_move" class="player_move"> </span>
+			</div>
 		</div>
 
-		<div class="player1">
-			<span id="player1_name">Player 1</span>
-			<span id="player1_turn" class="turn">Your Turn</span>
-			<span id="player1_move" class="player_move"> </span>
+		<div class="history_buttons">
+			<button class="block" style="right: 35px; top: 10px" onclick="engine.historyPoint((engine.inHistory+1))">
+				--->
+			</button>
+			<button class="block" style="left: 35px; top: 10px" onclick="engine.historyPoint((engine.inHistory-1))">
+				<---
+			</button>
 		</div>
+		<div id="history" class="history"></div>
 	</div>
-
-	<div class="history_buttons">
-		<button class="block" style="right: 35px; top: 10px" onclick="engine.historyPoint((engine.inHistory+1))">
-			--->
-		</button>
-		<button class="block" style="left: 35px; top: 10px" onclick="engine.historyPoint((engine.inHistory-1))">
-			<---
-		</button>
-	</div>
-	<div id="history" class="history"></div>
 
 </body>
 </html>
