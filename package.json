@@ -1,0 +1,27 @@
+{
+  "name": "ai-battle",
+  "version": "1.0.0",
+  "description": "Battle of the AI",
+  "main": "api/server.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "client-sessions": "^0.7.0",
+    "express": "^4.14.0",
+    "mysql": "^2.11.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test"  : "echo \"Error: no test specified\" && exit 1",
+    "start" : "node api/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitmalina/ai-battle.git"
+  },
+  "author": "Vladimir Malinouski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vitmalina/ai-battle/issues"
+  },
+  "homepage": "https://github.com/vitmalina/ai-battle#readme"
+}
