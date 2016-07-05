@@ -44,7 +44,7 @@ var board = (function() {
  				// allowing the piece to be slected
  				$("#" + i + "-" + j).click(select);
  				if (piece) { 
- 					$("#" + i + "-" + j).html("<img src='img/" + piece + "' width='64px' height='64px'>");
+ 					$("#" + i + "-" + j).html("<img src='img/" + piece + ".png' width='64px' height='64px'>");
 				} 
 				
 			}
