@@ -1,9 +1,11 @@
 var crypto      = require('crypto');
-var connection  = require('./connection.js');
+var mysql       = require('mysql');
 var express     = require('express');
-var app         = express();
 var session     = require('client-sessions');
-var bodyParser  = require('body-parser')
+var bodyParser  = require('body-parser');
+var conf        = require('./conf.js');
+var app         = express();
+var db          = mysql.createConnection(conf.db).connect();
 
 app.use(bodyParser.json());
 
@@ -30,7 +32,7 @@ app.get('/api/login', function(req, res) {
         const secret = req.query.pwd;
         const hash = crypto.createHash('sha256').update(secret).digest('base64');
         var sql = `SELECT * FROM users WHERE pass = ? AND login = ?`;
-        connection.query(sql, [hash, req.query.usr], function(err, rows, fields) {
+        db.query(sql, [hash, req.query.usr], function(err, rows, fields) {
             if (err) console.log("DB ERROR", err);
             if (rows.length > 0) {
                 req.session.user = rows[0].login;
@@ -54,7 +56,7 @@ app.get('/api/session', function (req, res) {
     if (req.session && req.session.user) {
         var sql = `SELECT * FROM users WHERE login="${req.session.user}"`;
         console.log(sql);
-        connection.query(sql, function(err, rows, fields) {
+        db.query(sql, function(err, rows, fields) {
             //console.log(rows);
             res.send(rows);
             //console.log(err);
@@ -88,7 +90,7 @@ app.get('/api/users', function (req, res) {
 
 	var sql = `SELECT * FROM users ${search} LIMIT ${offset}, ${limit};`;
 	console.log(sql);
-	connection.query(sql, function(err, rows, fields) {
+	db.query(sql, function(err, rows, fields) {
 		//console.log(rows);
 		res.send(rows);
 		//console.log(err);
@@ -106,7 +108,7 @@ app.post('/api/signup', function(req, res) {
 			const hash = crypto.createHash('sha256').update(secret).digest('base64');
 			var sql = `INSERT INTO users (fname, lname, email, pass, login) VALUES("${req.body.fname}", "${req.body.lname}", "${req.body.email}", "${hash}", "${req.body.usr}")`;
 			console.log(sql);
-			connection.query(sql, function(err, rows, fields) {
+			db.query(sql, function(err, rows, fields) {
 				//console.log(rows);
 				res.send(rows);
 				//console.log(err);
