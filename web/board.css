@@ -216,7 +216,7 @@ img {
 	right: -210px;
 	height: 522px;
 	overflow-y: hidden;
-	overflow: scroll;
+	overflow: auto;
 }
 
 
