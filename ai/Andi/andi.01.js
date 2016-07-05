@@ -17,7 +17,9 @@
 	lastMoves : [],
 
 
-	next	: function (field, moves) {
+	next	: function (game) {
+		var field = game.field;
+		var moves = game.moves;
 		
 		var moveStats = [];
 		var chosen = 0;
