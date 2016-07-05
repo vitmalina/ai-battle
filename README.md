@@ -16,3 +16,9 @@ Edit api/_conf.js file and enter your data base connection information. Then ope
 ```
 npm start
 ```
+
+or
+
+```
+node api/server.js
+```
