@@ -87,10 +87,7 @@ var engine = (function () {
 			g: ["wh", "wp", "", "", "", "", "bp", "bh"],
 			h: ["wr", "wp", "", "", "", "", "bp", "br"]
 		};
-<<<<<<< HEAD
 		// tests
-=======
->>>>>>> origin/master
 		// field = {
 		// 	a: ["wr", "wp", "", "", "", "bp", "", "br"],
 		// 	b: ["", "wp", "", "", "wh", "", "bp", "bh"],
@@ -148,11 +145,7 @@ var engine = (function () {
 		var mv = ais[player].next({
 			me		: engine.turn,
 			op		: (engine.turn == 'w' ? 'b' : 'w'),
-<<<<<<< HEAD
 			field	: cloneField(field), 
-=======
-			field	: $.extend(true, {}, field), 
->>>>>>> origin/master
 			moves	: moves.slice(0)
 		});
 		if (moves.indexOf(mv) == -1) {
@@ -164,11 +157,7 @@ var engine = (function () {
 
 	function move(action) {
 		if (engine.turn == '') return; // no game in progress
-<<<<<<< HEAD
 		board.refresh(cloneField(field), action);
-=======
-		board.refresh($.extend(true, {}, field), action);
->>>>>>> origin/master
 		history.push(action);
 		if (history.length >= 300) {
 			engine.turn = '';
