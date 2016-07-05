@@ -1,16 +1,11 @@
 var engine = (function () {
 
-	var field;
+	var field, worker, queue = [];
 	var places  = 'abcdefgh';
 	var taken   = [];
 	var history = [];
-	var ais	 	= {
-		randy	: 'randy.js',
-		lucy	: 'lucy.js',
-		andi	: 'Andi/andi.02.js',
-		jack    : 'jack.js'
-	};
-	var gameOver = false;
+	var gameOver= false;
+    var ais     = {}; // all ais are registered in engine-worker.js
 	var pretend = {
 		field   : {},
 		move	: pretendMove,
@@ -25,6 +20,7 @@ var engine = (function () {
 		player1		: null,		// white, null is human, otherwise ai name
 		player2		: null,		// black
 		init 		: init,
+        send        : send,     // post a message to web worker
 		reset		: reset,
 		start 		: start,
 		move		: move,
@@ -37,37 +33,48 @@ var engine = (function () {
 	}
 
 	function init() {
-		for (var a in ais) {
-			$.ajax({
-					url   : 'ai/'+ ais[a],
-					async : false,
-					method: 'get',
-				})
-				.done(function (text, status, xhr) {
-					var engine, field, places, taken, history, ais;
-					eval(text);
-					if (ai.name == null || typeof ai.next != 'function') {
-						console.log('ERROR: cannot load '+ a + '.ai. File needs to look like "var ai = { name: "name", next: function() {...} }');	
-					}
-					_register(ai.name.toLowerCase(), ai);
-				})
-				.fail(function () {
-					console.log('ERROR: cannot load '+ a);
-				});
-		}
-		// this function is here for sand boxing
-		function _register(name, ai) {
-			ais[name] = ai;
-			$("#player_one_options, #player_two_options").append("<option value=\"" + name +"\">" + ais[name].name + "</option>");
-		}
-		reset();
-		var config = localStorage.getItem('ai-battle');
-		if (config) {
-			config = JSON.parse(config);
-			$("#player_one_options").val(config.player1 || 'Human');
-			$("#player_two_options").val(config.player2 || 'Human');
-		} 
+        // init web worker
+        worker = new Worker('app/engine-worker.js');
+        worker.addEventListener('message', function (event) {
+            var pop = queue.shift();
+            // console.log('Worker return: ', pop.cmd, ((new Date()).getTime() - pop.time) + 'ms', pop);
+            if (typeof pop.cb == 'function') pop.cb(event.data);
+        }, false);
+
+        // load ais in web worker
+        send({ cmd: 'init' }, function (data) {
+            // set as flobal variable
+            ais = data.ais;
+            // populate drop downs
+            if (ais) {
+                for (var ai in ais) {
+                    $("#player_one_options, #player_two_options")
+                        .append("<option value=\"" + ai +"\">" + ais[ai].name + "</option>");
+                }
+            }
+            reset();
+            var config = localStorage.getItem('ai-battle');
+            if (config) {
+                config = JSON.parse(config);
+                $("#player_one_options").val(config.player1 || 'Human');
+                $("#player_two_options").val(config.player2 || 'Human');
+            }
+        });
 	}
+
+    // sends message to engine-worker.js
+
+    function send(cmd, callBack) {
+        if (callBack == null) {
+            callBack = function (result) {
+               if (result && !$.isEmptyObject(result)) console.log(result);
+            }
+        }
+        var time = (new Date()).getTime();
+        queue.push($.extend({}, cmd, { time: time, cb: callBack }));
+        worker.postMessage(cmd);
+        return queue[queue.length - 1];
+    }
 
 	function reset() {
 		engine.turn = '';
@@ -142,17 +149,23 @@ var engine = (function () {
 
 	function next(player) {
 		var moves = getMoves(field, engine.turn);
-		var mv = ais[player].next({
-			me		: engine.turn,
-			op		: (engine.turn == 'w' ? 'b' : 'w'),
-			field	: cloneField(field), 
-			moves	: moves.slice(0)
-		});
-		if (moves.indexOf(mv) == -1) {
-			alert("ERROR: Invliad move "+ mv +" by "+ ais[player].name);
-			return;
-		}
-		move(mv);
+        // request next move from engine-workedr
+        send({
+            cmd   : 'next',
+            ai    : player,
+            state : {
+                me    : engine.turn,
+                op    : (engine.turn == 'w' ? 'b' : 'w'),
+                field : cloneField(field),
+                moves : moves.slice(0)
+            }
+         }, function (data) {
+            if (moves.indexOf(data.move) == -1) {
+                alert("ERROR: Invliad move "+ mv +" by "+ ais[player].name);
+                return;
+            }
+            move(data.move);
+         });
 	}
 
 	function move(action) {
@@ -225,7 +238,7 @@ var engine = (function () {
 			}
 		} else {
 			$('#player1_turn').hide();
-			$('#player2_turn').show();			
+			$('#player2_turn').show();
 			$("#player2_move").html(moveCount > 0 ? moveCount + " possible moves" : '');
 			$("#player1_move").html("");
 			if (engine.player1 == null && engine.player2 == null) {
@@ -252,10 +265,10 @@ var engine = (function () {
 						} else {
 							$('.endgame').html(ais[engine.player2].name + ' (black) has won!');
 						}
-						
+
 						engine.gameOver = true;
 					}
-		
+
 				} else { // white wins (player 1)
 					$('#player1_turn').html('Winner').show();
 					if (engine.player1 == null && engine.player2 == null) $('.endgame-holder').css("transform", "rotate(180deg)");
@@ -420,7 +433,7 @@ var engine = (function () {
 						for (var k=1; k<8; k++) {
 							var beat = addIfValid(piece, f, i, num - k, i);
 							if (beat === false || beat !== '') break;
-						}						
+						}
 					}
 					// king
 					if (piece[1] == 'k') {
@@ -459,7 +472,7 @@ var engine = (function () {
 							}
 						}
 						var rookPos = parseInt(rooks[0].substr(1, 1))-1;
-						
+
 						if (vCheck === true) {
 							var newField = pretendMove(cloneField(fld), 'e' + (rookPos+1) + ':f' + (rookPos+1));
 							if (isCheck(newField, engine.turn)) castleLeft = false;
